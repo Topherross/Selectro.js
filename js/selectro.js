@@ -15,6 +15,7 @@
                 display = options.style.display;
 
             options.style.display = (display === "block")? "none" : "block" ;
+            el.classList.toggle('selected');
             options.addEventListener('click', function(e){e.stopPropagation();});
 
             return false;
@@ -57,6 +58,7 @@
             new_select.style.width = new_select.offsetWidth - parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-left')) - parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-right')) -  (parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('border-width'))*2) + "px";
             new_select.style.height = new_select.offsetHeight - parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-top')) - parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-bottom')) -  (parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('border-width'))*2) + "px";
             new_options.style.width = parseFloat(new_select.style.width) + parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-left')) + parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-right')) +  (parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('border-width'))*2) - (parseFloat(window.getComputedStyle(new_options, null).getPropertyValue('border-width'))*2) + "px";
+            new_options.style.top = parseFloat(new_select.style.height) + parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-top')) + parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('padding-bottom')) + (parseFloat(window.getComputedStyle(new_select, null).getPropertyValue('border-width'))) + "px";
 
             new_select.addEventListener('click', function(e){e.stopPropagation(); _toggleOptions(this);});
             document.addEventListener('click', function(){_hideOptions(new_select);});
