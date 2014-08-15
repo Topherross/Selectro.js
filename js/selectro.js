@@ -39,6 +39,8 @@
         [].forEach.call(selects, function(obj){
             var new_select = document.createElement('div'),
                 arrow = document.createElement('span'),
+                serach_wrap = document.createElement('div'),
+                glass = document.createElement('span'),
                 search = document.createElement('input'),
                 new_options = document.createElement('div');
 
