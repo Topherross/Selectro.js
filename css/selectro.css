@@ -23,38 +23,34 @@ html{
 body{
     background:rgb(0,0,0);
 }
-form{
-    width:160px;height:40px;
-    position:absolute;
-    margin:auto;
-    top:0;right:0;bottom:0;left:0;
-}
 
 /* --------------- SELECTRO SPECIFIC STYLES ---------------- */
 
 div.selectro{
     background:rgb(255,255,255);
-    border:rgb(96,96,96) 1px solid;
+    border:rgb(180,180,180) 1px solid;
     border-radius:3px;
     color:rgb(80,80,80);
     display:inline-block;
-    padding:4px 8px;
+    padding:10px 20px;
     -webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
     user-select:none;
     cursor:default;
+    font-size:1.1em;
 }
 
 div.selectro.selected{
     border-radius:3px 3px 0 0;
+    border-bottom-color:rgb(222,222,222);
 }
 
 div.selectro-options{
-    left:-1px;
-    margin-top:-1px;
     background:rgb(255,255,255);
-    border:rgb(96,96,96) 1px solid;
+    border-color:rgb(180,180,180);
+    border-style:solid;
+    border-width:0 1px 1px 1px;
     border-radius:0 0 3px 3px;
     -webkit-user-select:none;
     -moz-user-select:none;
@@ -64,8 +60,9 @@ div.selectro-options{
 }
 
 div.selectro-options > div{
-    padding:4px 8px;
+    padding:6px 12px;
     background:transparent;
+    color:rgb(80,80,80);
 }
 
 div.selectro-options > div:hover{
