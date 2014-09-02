@@ -3,6 +3,35 @@
     var selectro = {},
 
         _values = "undefined",
+        _clickfunc = "undefined",
+        _altclick = "undefined",
+        _configs = {
+            target:'.selectro'
+        },
+
+        _browser = function(){
+            var user_agent = navigator.userAgent;
+
+            if(user_agent.match(/iPhone|iPod|iPad|Android|Blackberry|Opera Mini|Opera Mobi/i)) {
+                _clickfunc = 'touchstart';
+                _altclick = 'touchend';
+                return 'mobile';
+            }else if(user_agent.indexOf("Chrome") > -1) {
+                return "chrome";
+            } else if (user_agent.indexOf("Safari") > -1) {
+                return "safari";
+            } else if (user_agent.indexOf("Opera") > -1) {
+                return "opera";
+            } else if (user_agent.indexOf("Firefox") > -1) {
+                return "firefox";
+            } else if (user_agent.indexOf("MSIE") > -1) {
+                return "msie";
+            }
+        },
+
+        _setConfigs = function(configs){
+
+        },
 
         _setAttributes = function(el, attrs){
             for(var attr in attrs){
@@ -65,8 +94,9 @@
             });
         };
 
-    selectro.init = function(){
-        var selects = document.querySelectorAll('select.selectro');
+    selectro.init = function(configs){
+        var __configs = (typeof configs !== "undefined" && typeof configs === "object")? configs : _configs,
+            selects = document.querySelectorAll(_configs.target);
 
         _values = (typeof _values === "undefined")? [] : _values;
 
@@ -74,19 +104,27 @@
             var select_wrap = document.createElement('div'),
                 new_select = document.createElement('div'),
                 arrow = document.createElement('span'),
-                serach_wrap = document.createElement('div'),
+                search_wrap = document.createElement('span'),
                 glass = document.createElement('span'),
+                cancel = document.createElement('span'),
                 search = document.createElement('input'),
-                new_options = document.createElement('div');
+                new_options = document.createElement('div'),
+                select_children = obj.children;
 
+            _setAttributes(select_wrap, {'class':'selectro-wrap', 'style':'display:inline-block;'});
             _setAttributes(new_select, {'style':'overflow:visible;position:relative;', 'class':'selectro'});
             _setAttributes(new_options, {'style':'position:relative;display:none;', 'class':'selectro-options'});
             _setAttributes(arrow, {'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;margin:0 0 0 8px;'});
-            _setAttributes(search, {'type':'text', 'class':'selectro-search', 'style':'display:block;', 'name':'selectro-search'});
+            _setAttributes(search_wrap, {'style':'display:inline-block;padding:0;margin:0;border:rgb(202,202,202) 1px solid;', 'class':'selectro-search-wrap'});
+            _setAttributes(search, {'type':'text', 'class':'selectro-search', 'style':'position:relative;border:none 0;vertical-align:middle;', 'name':'selectro-search'});
+            _setAttributes(glass, {'style':'display:inline-block;vertical-align:middle;', 'class':'selectro-glass'});
 
-            new_options.appendChild(search);
+            search_wrap.appendChild(search);
+            search_wrap.appendChild(glass);
+            new_options.appendChild(search_wrap);
 
-            [].forEach.call(obj.querySelectorAll('option'), function(el){
+
+            [].forEach.call(select_children, function(el){
                 if(el === obj.firstElementChild){
                     new_select.innerText = el.firstChild.nodeValue;
                 }else {
@@ -107,24 +145,12 @@
             new_select.appendChild(arrow);
             select_wrap.appendChild(new_options);
 
-            new_select.style.width =  _calculateWidth(new_select, true);
-            select_wrap.style.width = new_select.offsetWidth + "px";
-            new_select.style.height = _calculateHeight(new_select, true);
-
             new_select.addEventListener('click', function(e){e.stopPropagation(); _toggleOptions(new_select);});
             search.addEventListener('focus', function(){_search(search);});
             document.addEventListener('click', function(){_hideOptions(new_select);});
 
             obj.style.display = "none";
         });
-    };
-
-    selectro.getParent = function(){
-        return _parent;
-    };
-
-    selectro.getValue = function(){
-        return _replacement.value;
     };
 
     if (typeof module !== 'undefined' && module.exports) {
