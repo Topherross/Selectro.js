@@ -107,12 +107,12 @@
 
         _objs = {
             new_input : _createEl('input'),
-            select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'display:inline-block;'}),
+            select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'display:inline-block;position:relative;'}),
             new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':'selectro'}),
             search : _createEl('input', {'class':'selectro-search', 'type':'text'}),
             label : _createEl('span', {'class':'selectro-label'}),
-            arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;margin:0 0 0 8px;'}),
-            new_options : _createEl('div', {'style':'position:relative;display:none;', 'class':'selectro-options'})
+            arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
+            new_options : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options'})
         },
 
         _configs = {
@@ -179,7 +179,7 @@
             _objs.select_wrap.appendChild(_objs.new_select);
             _objs.new_select.appendChild(_objs.label);
             _objs.new_select.appendChild(_objs.arrow);
-            _objs.select_wrap.appendChild(_objs.new_options);
+            _objs.select_wrap.appendChild(_objs.new_options);console.log(_objs.select_wrap.width);
 
             _objs.new_select.addEventListener('click', function(e){e.stopPropagation(); _toggleOptions(_objs.new_select);});
             _objs.search.addEventListener('focus', function(){_search(_objs.search);});
@@ -195,21 +195,3 @@
         window.selectro = selectro;
     }
 })();
-
-if(document.readyState === "complete"){
-    selectro.init({label:"Select a Car"});
-}else{
-    if(document.addEventListener){
-        try{
-            document.addEventListener("DOMContentLoaded", function(){selectro.init({label:"Select a Car"})}, false);
-        }catch(e){
-            window.addEventListener("load", function(){selectro.init({label:"Select a Car"})}, false);
-        }
-    }else if(document.attachEvent){
-        try{
-            document.attachEvent("onreadystatechange", function(){selectro.init({label:"Select a Car"})});
-        }catch(e){
-            window.attachEvent("onload", function(){selectro.init({label:"Select a Car"})});
-        }
-    }
-}

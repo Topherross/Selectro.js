@@ -26,13 +26,18 @@ body{
 
 /* --------------- SELECTRO SPECIFIC STYLES ---------------- */
 
+div.selectro-wrap{
+    display:inline-block;
+    width:200px;
+    margin:60px;
+}
+
 div.selectro{
     background:rgb(255,255,255);
     border:rgb(180,180,180) 1px solid;
     border-radius:3px;
     color:rgb(80,80,80);
-    display:inline-block;
-    padding:16px 32px;
+    padding:6px 14px;
     -webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
@@ -40,6 +45,11 @@ div.selectro{
     cursor:default;
     font-size:1.5em;
     letter-spacing:0.1em;
+}
+
+div.selectro span.selectro-arrow{
+    margin:9px 0 0 9px;
+    float:right;
 }
 
 div.selectro.selected{
@@ -58,10 +68,11 @@ div.selectro-options{
     -ms-user-select:none;
     user-select:none;
     cursor:default;
+    width:198px;
 }
 
 div.selectro-options > div, div.selectro-options > h6{
-    padding:6px 12px;
+    padding:6px 14px;
     background:transparent;
     color:rgb(80,80,80);
     font-size:1.2em;
