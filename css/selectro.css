@@ -39,6 +39,7 @@ div.selectro{
     user-select:none;
     cursor:default;
     font-size:1.5em;
+    letter-spacing:0.1em;
 }
 
 div.selectro.selected{
@@ -59,12 +60,16 @@ div.selectro-options{
     cursor:default;
 }
 
-div.selectro-options > div{
+div.selectro-options > div, div.selectro-options > h6{
     padding:6px 12px;
     background:transparent;
     color:rgb(80,80,80);
     font-size:1.2em;
     letter-spacing:0.1em;
+}
+
+div.selectro-options > h6{
+    font-weight:600;
 }
 
 div.selectro-options > div:hover{
