@@ -121,8 +121,7 @@
                 arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
                 new_options : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options'})
             },
-            selects = document.querySelectorAll(".selectro"),
-            sibling = selects.nextElementSibling;
+            selects = document.querySelectorAll(".selectro");
 
         if(_browser() === "mobile"){
             if(__configs.links){
@@ -136,7 +135,8 @@
         _values = (typeof _values === "undefined")? [] : _values;
 
         [].forEach.call(selects, function(obj){
-            var select_children = obj.children;
+            var select_children = obj.children,
+                sibling = obj.nextElementSibling;
 
             _setAttributes(_objs.new_input, {'type':'hidden', 'name':obj.getAttribute("name"), 'value':''});
 
