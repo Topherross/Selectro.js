@@ -105,16 +105,6 @@
             });
         },
 
-        _objs = {
-            new_input : _createEl('input'),
-            select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'display:inline-block;position:relative;'}),
-            new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':'selectro'}),
-            search : _createEl('input', {'class':'selectro-search', 'type':'text'}),
-            label : _createEl('span', {'class':'selectro-label'}),
-            arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
-            new_options : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options'})
-        },
-
         _configs = {
             label:"Select an Option",
             links:false
@@ -122,6 +112,15 @@
 
     selectro.init = function(configs){
         var __configs = (typeof configs !== "undefined" && typeof configs === "object")? configs : _configs,
+            _objs = {
+                new_input : _createEl('input'),
+                select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'display:inline-block;position:relative;'}),
+                new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':'selectro'}),
+                search : _createEl('input', {'class':'selectro-search', 'type':'text'}),
+                label : _createEl('span', {'class':'selectro-label'}),
+                arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
+                new_options : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options'})
+            },
             selects = document.querySelectorAll(".selectro");
 
         if(_browser() === "mobile"){
