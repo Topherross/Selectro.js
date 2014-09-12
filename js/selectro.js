@@ -121,7 +121,8 @@
                 arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
                 new_options : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options'})
             },
-            selects = document.querySelectorAll(".selectro");
+            selects = document.querySelectorAll(".selectro"),
+            sibling = selects.nextElementSibling;
 
         if(_browser() === "mobile"){
             if(__configs.links){
@@ -174,7 +175,10 @@
             });
 
             obj.parentNode.appendChild(_objs.new_input);
-            obj.parentNode.appendChild(_objs.select_wrap);
+            if(typeof sibling != "undefined")
+                obj.parentNode.insertBefore(_objs.select_wrap, sibling);
+            else
+                obj.parentNode.appendChild(_objs.select_wrap);
             _objs.select_wrap.appendChild(_objs.new_select);
             _objs.new_select.appendChild(_objs.label);
             _objs.new_select.appendChild(_objs.arrow);
