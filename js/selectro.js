@@ -196,6 +196,7 @@
                 var _create_obj = function(obj){
                     if(obj === select_children[0] && !el.hasAttribute('value')){
                         label = el.value;
+                        _objs.original_input.value = "";
                         return;
                     }
 

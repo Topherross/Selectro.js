@@ -85,6 +85,11 @@ input[type="submit"]{
 
 /* --------------- DEMO SPECIFIC SELECTRO STYLES ---------------- */
 
+div.selectro-wrap *{
+    font-family:"Open Sans Condensed", sans-serif;
+    font-weight:300;
+}
+
 div.selectro-wrap{
     float:left;
     margin:4px 0 10px;
@@ -170,11 +175,12 @@ input.selectro-search{
     color:rgb(80,80,80);
     border:none 0;
     padding:4px 6px;
+    font-size:1.0em;
 }
 
 div.selectro-search-icon{
     width:24px;height:24px;
-    background:#000000;
+    background:transparent url(../img/Glass.png) no-repeat left -24px;
 }
 
 div.selectro-options div.selectro-option, div.selectro-options h6.selecrto-optgroup-header{
