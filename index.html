@@ -12,6 +12,19 @@
     </head>
     <body>
     <form action="" method="post">
+        <label for="year_selector">Year</label>
+        <select name="year" id="year_selector" class="selectro">
+            <option>Select a Year</option>
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+        </select>
         <label for="car_selector">Vehicle</label>
         <select name="car" id="car_selector" class="selectro">
             <option>Select a Car</option>
@@ -32,19 +45,6 @@
                 <option value="nsx">NSX</option>
             </optgroup>
         </select>
-        <label for="year_selector">Year</label>
-        <select name="year" id="year_selector" class="selectro">
-            <option>Select a Year</option>
-            <option value="2007">2007</option>
-            <option value="2008">2008</option>
-            <option value="2009">2009</option>
-            <option value="2010">2010</option>
-            <option value="2011">2011</option>
-            <option value="2012">2012</option>
-            <option value="2013">2013</option>
-            <option value="2014">2014</option>
-            <option value="2015">2015</option>
-        </select>
         <label for="package_selector">Package</label>
         <select name="package" id="package_selector" class="selectro">
             <option>Select a Package</option>
@@ -59,7 +59,6 @@
             <input type="submit" name="submit" value="Submit" />
         </div>
     </form>
-    <p style="color:white;margin:0 60px;">Test paragraph</p>
     </body>
     <script type="text/javascript">
         if(document.readyState === "complete"){
