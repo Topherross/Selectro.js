@@ -161,7 +161,8 @@ div.selectro-options{
 }
 
 div.selectro-search-wrap{
-    border:rgba(180,180,180,0.8) 1px solid;
+    border:rgba(180,180,180,0.7) 1px solid;
+    border-radius:3px;
     margin:6px;
 }
 
