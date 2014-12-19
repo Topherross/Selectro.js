@@ -7,7 +7,8 @@
         _altclick = "click",
         _configs = {
             links:false,
-            searchable:true
+            searchable:true,
+            callback:false
         },
         objects = [],
 
@@ -105,7 +106,7 @@
 
         _select = function(el, i){
             if(objects.hasOwnProperty(i)){
-                objects[i].new_input.value = el.getAttribute("data-value");
+                objects[i].original_input.value = el.getAttribute("data-value");
 
                  _setText(objects[i].label, _getText(el));
 
@@ -153,7 +154,7 @@
 
         [].forEach.call(selects, function(obj){
             var _objs = {
-                    new_input : _createEl('input'),
+                    original_input : obj,
                     select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'position:relative;'}),
                     new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':'selectro'}),
                     search : _createEl('input', {'class':'selectro-search', 'type':'text'}),
@@ -165,8 +166,6 @@
                 label = "Select an Option",
                 select_children = obj.children,
                 sibling = obj.nextElementSibling;
-
-            _setAttributes(_objs.new_input, {'type':'hidden', 'name':obj.getAttribute("name"), 'value':''});
 
             [].forEach.call(select_children, function(el){
                 var _create_obj = function(obj){
@@ -186,7 +185,6 @@
                         new_a.addEventListener("click", function(){_select(this, object_count);});
 
                     if(obj.hasAttribute('selected')){
-                        _objs.new_input.value = obj.value;
                         new_a.classList.add('selected');
                         _setText(_objs.label, _getText(obj));
                         _objs.label.classList.remove('default');
@@ -211,8 +209,6 @@
 
             _setText(_objs.label, label);
 
-            obj.parentNode.appendChild(_objs.new_input);
-
             if(typeof sibling !== "undefined")
                 obj.parentNode.insertBefore(_objs.select_wrap, sibling);
             else
@@ -230,8 +226,12 @@
 
             objects.push(_objs);
 
-            obj.parentNode.removeChild(obj);
+            obj.style.display = "none";
         });
+
+        if(typeof _configs.callback === "function")
+            _configs.callback();
+
     };
 
     if (typeof module !== 'undefined' && module.exports) {
