@@ -8,7 +8,9 @@
         _configs = {
             links:false,
             searchable:true,
-            callback:false
+            beforeInit:false,
+            afterInit:false,
+            afterSelect:false
         },
         objects = [],
 
@@ -114,6 +116,9 @@
                     objects[i].label.classList.remove('default');
 
                 _toggleOptions(i);
+
+                if(typeof _configs.afterSelect === "function")
+                    _configs.afterSelect(objects[i]);
             }
 
             return false;
@@ -140,6 +145,9 @@
         if(typeof configs !== "undefined" && typeof configs === "object"){
             _setConfigs(configs);
         }
+
+        if(typeof _configs.beforeInit === "function")
+            _configs.beforeInit();
 
         var selects = document.querySelectorAll(".selectro");
 
@@ -229,8 +237,8 @@
             obj.style.display = "none";
         });
 
-        if(typeof _configs.callback === "function")
-            _configs.callback();
+        if(typeof _configs.afterInit === "function")
+            _configs.afterInit(objects);
 
     };
 

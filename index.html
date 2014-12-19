@@ -64,24 +64,39 @@
         (function(){
             var submit = function(form){
                     for(var i = 0; i < form.length; i++){
-                        if(form[i].value !== "Submit")
-                        console.log(form[i].value);
+                        if(form[i].value !== "Submit" && typeof console !== "undefined")
+                            console.log(form[i].value);
                     }
                 },
                 init = function(){
-                    selectro.init({callback:function(){
-                        var form = document.querySelector('#car_form'),
-                            submit_button = document.querySelector('#submit_button');
+                    var form = document.querySelector('#car_form'),
+                        submit_button = document.querySelector('#submit_button');
 
-                        form.addEventListener('submit', function(){
-                            event.preventDefault();
-                            submit(form);
-                        });
-                        submit_button.addEventListener('click', function(){
-                            event.preventDefault();
-                            submit(form);
-                        });
-                    }});
+                    selectro.init({
+                        beforeInit:function(){
+                            var header = document.createElement('h1');
+
+                            header.innerHTML = 'Choose Your Dream Car!';
+                            form.insertBefore(header, form.children[0]);
+                        },
+                        afterInit:function(objs){
+                            if(typeof console !== "undefined")
+                                console.log(objs);
+
+                            form.addEventListener('submit', function(){
+                                event.preventDefault();
+                                submit(form);
+                            });
+                            submit_button.addEventListener('click', function(){
+                                event.preventDefault();
+                                submit(form);
+                            });
+                        },
+                        afterSelect:function(obj){
+                            if(typeof console !== "undefined")
+                                console.log(obj);
+                        }
+                    });
                 };
 
             if(document.readyState === "complete"){
