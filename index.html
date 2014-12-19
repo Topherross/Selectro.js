@@ -62,7 +62,26 @@
     </body>
     <script type="text/javascript">
         (function(){
-            var submit = function(form){
+            var ready = function(){
+                    if(document.readyState === "complete"){
+                        init();
+                    }else{
+                        if(document.addEventListener){
+                            try{
+                                document.addEventListener("DOMContentLoaded", function(){init();}, false);
+                            }catch(e){
+                                window.addEventListener("load", function(){init();}, false);
+                            }
+                        }else if(document.attachEvent){
+                            try{
+                                document.attachEvent("onreadystatechange", function(){init();});
+                            }catch(e){
+                                window.attachEvent("onload", function(){init()});
+                            }
+                        }
+                    }
+                },
+                submit = function(form){
                     for(var i = 0; i < form.length; i++){
                         if(form[i].value !== "Submit" && typeof console !== "undefined")
                             console.log(form[i].value);
@@ -72,6 +91,7 @@
                     var form = document.querySelector('#car_form'),
                         submit_button = document.querySelector('#submit_button');
 
+                    /*----- BEGIN SELECTRO INIT -----*/
                     selectro.init({
                         beforeInit:function(){
                             var header = document.createElement('h1');
@@ -97,25 +117,10 @@
                                 console.log(obj);
                         }
                     });
+                    /*----- END SELECTRO INIT -----*/
                 };
 
-            if(document.readyState === "complete"){
-                init();
-            }else{
-                if(document.addEventListener){
-                    try{
-                        document.addEventListener("DOMContentLoaded", function(){init();}, false);
-                    }catch(e){
-                        window.addEventListener("load", function(){init();}, false);
-                    }
-                }else if(document.attachEvent){
-                    try{
-                        document.attachEvent("onreadystatechange", function(){init();});
-                    }catch(e){
-                        window.attachEvent("onload", function(){init()});
-                    }
-                }
-            }
+            ready();
         })();
     </script>
 </html>
