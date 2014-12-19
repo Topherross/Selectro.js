@@ -24,12 +24,52 @@ body{
     background:rgb(0,0,0);
 }
 
+form{
+    overflow:visible;
+}
+
+label{
+    font-size:1.6em;
+    padding:30px 10px;
+}
+
+div.submit-wrap{
+    clear:both;
+    overflow:auto;
+    width:600px;
+}
+
+input[type="submit"]{
+    float:right;
+    width:130px;
+    border-radius:3px;
+    background:rgb(47,91,255);
+    color:rgb(255,255,255);
+    text-shadow:0 -1px 0 #000;
+    padding:14px 0 15px;
+    text-align:center;
+    font-family:"Open Sans Condensed", sans-serif;
+    font-size:1.4em;
+    letter-spacing:1px;
+    border:none 0;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    outline:none;
+    cursor:pointer;
+}
+
 /* --------------- SELECTRO SPECIFIC STYLES ---------------- */
 
+div.selectro-wrap *{
+    box-sizing:border-box;
+}
+
 div.selectro-wrap{
+    box-sizing:border-box;
     display:inline-block;
     width:200px;
-    margin:60px;
+    margin:30px 10px;
 }
 
 div.selectro{
@@ -45,6 +85,14 @@ div.selectro{
     cursor:default;
     font-size:1.5em;
     letter-spacing:0.1em;
+}
+
+div.selectro span.selectro-label{
+    color:rgb(80,80,80);
+}
+
+div.selectro span.selectro-label.default{
+    color:rgba(80,80,80,0.5);
 }
 
 div.selectro span.selectro-arrow{
@@ -68,7 +116,7 @@ div.selectro-options{
     -ms-user-select:none;
     user-select:none;
     cursor:default;
-    width:198px;
+    width:100%;
 }
 
 div.selectro-options > div, div.selectro-options > h6{
