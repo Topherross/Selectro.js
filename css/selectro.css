@@ -155,7 +155,29 @@ div.selectro-options{
     width:100%;
 }
 
-div.selectro-options > div, div.selectro-options > h6{
+div.selectro-search-wrap{
+    border:rgba(180,180,180,0.8) 1px solid;
+    margin:6px;
+}
+
+input.selectro-search{
+    box-sizing:border-box;
+    display:block;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    outline:none;
+    color:rgb(80,80,80);
+    border:none 0;
+    padding:4px 6px;
+}
+
+div.selectro-search-icon{
+    width:24px;height:24px;
+    background:#000000;
+}
+
+div.selectro-options div.selectro-option, div.selectro-options h6.selecrto-optgroup-header{
     padding:6px 14px;
     background:transparent;
     color:rgb(80,80,80);
@@ -163,11 +185,11 @@ div.selectro-options > div, div.selectro-options > h6{
     letter-spacing:0.1em;
 }
 
-div.selectro-options > h6{
+div.selectro-options h6.selecrto-optgroup-header{
     font-weight:600;
 }
 
-div.selectro-options > div:hover{
+div.selectro-options div.selectro-option:hover{
     background:rgb(228,94,0);
     color:white;
 }

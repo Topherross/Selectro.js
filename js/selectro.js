@@ -8,6 +8,7 @@
         _configs = {
             links:false,
             searchable:true,
+            searchIcon:true,
             beforeInit:false,
             afterInit:false,
             afterSelect:false
@@ -70,6 +71,10 @@
                         objects[i].new_options.style.zIndex = (objects[i].new_options.style.display === "block")? "10000" : "auto" ;
                         objects[i].new_select.classList.toggle('selected');
                         objects[i].new_options.addEventListener('click', function(e){e.stopPropagation();});
+
+                        if(objects[i].new_options.style.display === "block")
+                            objects[i].search.focus();
+
                     }else if(objects[i].new_options.style.display === "block"){
                         objects[i].new_options.style.display = "none";
                         objects[i].new_options.style.zIndex = "auto";
@@ -165,7 +170,6 @@
                     original_input : obj,
                     select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'position:relative;'}),
                     new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':obj.classList, 'id':(obj.hasAttribute('id'))? 'selectro_'+obj.getAttribute('id') : 'selectro_'+index}),
-                    search : _createEl('input', {'class':'selectro-search', 'type':'text'}),
                     label : _createEl('span', {'class':'selectro-label default'}),
                     arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
                     new_options : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options'})
@@ -175,6 +179,19 @@
                 select_children = obj.children,
                 sibling = obj.nextElementSibling;
 
+            if(_configs.searchable === true) {
+                _objs.search_wrap = _createEl('div', {'class':'selectro-search-wrap', 'style':'overflow:auto;'});
+                _objs.search = _createEl('input', {'class':'selectro-search', 'type':'text'});
+                _objs.new_options.appendChild(_objs.search_wrap);
+
+                if (_configs.searchIcon === true) {
+                    _objs.search_icon = _createEl('div', {'class':'selectro-search-icon', 'style':'float:right;'});
+                    _objs.search_wrap.appendChild(_objs.search_icon);
+                }
+
+                _objs.search_wrap.appendChild(_objs.search);
+            }
+
             [].forEach.call(select_children, function(el){
                 var _create_obj = function(obj){
                     if(obj === select_children[0] && !el.hasAttribute('value')){
@@ -182,7 +199,7 @@
                         return;
                     }
 
-                    var new_a = _createEl('div', {'style': 'display:block;position:relative;', 'data-value': obj.value});
+                    var new_a = _createEl('div', {'class':'selectro-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
 
                     _setText(new_a, obj.firstChild.nodeValue);
                     _objs.new_options.appendChild(new_a);
@@ -201,7 +218,7 @@
 
                 if(el.tagName.toLowerCase() === "optgroup"){
                     if(typeof el.getAttribute("label") !== "undefined"){
-                        var opt_header = document.createElement("h6");
+                        var opt_header = _createEl("h6", {'class':'selectro-optgroup-header'});
 
                         _setText(opt_header, el.getAttribute("label"));
                         _objs.new_options.appendChild(opt_header);
