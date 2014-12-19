@@ -160,11 +160,11 @@
             return;
         }
 
-        [].forEach.call(selects, function(obj){
+        [].forEach.call(selects, function(obj, index){
             var _objs = {
                     original_input : obj,
                     select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'position:relative;'}),
-                    new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':'selectro'}),
+                    new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':obj.classList, 'id':(obj.hasAttribute('id'))? 'selectro_'+obj.getAttribute('id') : 'selectro_'+index}),
                     search : _createEl('input', {'class':'selectro-search', 'type':'text'}),
                     label : _createEl('span', {'class':'selectro-label default'}),
                     arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
