@@ -11,7 +11,7 @@
         <title>Selectro</title>
     </head>
     <body>
-    <form action="" method="post">
+    <form action="" method="post" id="car_form">
         <label for="year_selector">Year</label>
         <select name="year" id="year_selector" class="selectro">
             <option>Select a Year</option>
@@ -56,27 +56,51 @@
             <option value="gti">GTI</option>
         </select>
         <div class="submit-wrap">
-            <input type="submit" name="submit" value="Submit" />
+            <input type="submit" name="submit" value="Submit" id="submit_button" />
         </div>
     </form>
     </body>
     <script type="text/javascript">
-        if(document.readyState === "complete"){
-            selectro.init();
-        }else{
-            if(document.addEventListener){
-                try{
-                    document.addEventListener("DOMContentLoaded", function(){selectro.init()}, false);
-                }catch(e){
-                    window.addEventListener("load", function(){selectro.init()}, false);
-                }
-            }else if(document.attachEvent){
-                try{
-                    document.attachEvent("onreadystatechange", function(){selectro.init()});
-                }catch(e){
-                    window.attachEvent("onload", function(){selectro.init()});
+        (function(){
+            var submit = function(form){
+                    for(var i = 0; i < form.length; i++){
+                        if(form[i].value !== "Submit")
+                        console.log(form[i].value);
+                    }
+                },
+                init = function(){
+                    selectro.init({callback:function(){
+                        var form = document.querySelector('#car_form'),
+                            submit_button = document.querySelector('#submit_button');
+
+                        form.addEventListener('submit', function(){
+                            event.preventDefault();
+                            submit(form);
+                        });
+                        submit_button.addEventListener('click', function(){
+                            event.preventDefault();
+                            submit(form);
+                        });
+                    }});
+                };
+
+            if(document.readyState === "complete"){
+                init();
+            }else{
+                if(document.addEventListener){
+                    try{
+                        document.addEventListener("DOMContentLoaded", function(){init();}, false);
+                    }catch(e){
+                        window.addEventListener("load", function(){init();}, false);
+                    }
+                }else if(document.attachEvent){
+                    try{
+                        document.attachEvent("onreadystatechange", function(){init();});
+                    }catch(e){
+                        window.attachEvent("onload", function(){init()});
+                    }
                 }
             }
-        }
+        })();
     </script>
 </html>
