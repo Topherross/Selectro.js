@@ -1,6 +1,8 @@
 @charset "UTF-8";
 /* CSS Document */
 
+/* --------------- BOF ---------------- */
+
 /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
 
  *{
@@ -85,6 +87,11 @@ input[type="submit"]{
 
 /* --------------- DEMO SPECIFIC SELECTRO STYLES ---------------- */
 
+div.selectro-wrap *{
+    font-family:"Open Sans Condensed", sans-serif;
+    font-weight:300;
+}
+
 div.selectro-wrap{
     float:left;
     margin:4px 0 10px;
@@ -93,6 +100,20 @@ div.selectro-wrap{
 div.selectro-options{
     max-height:140px;
     overflow:auto;
+}
+
+div.selectro-grid-wrap{
+    float:left;
+    margin:4px 0 10px;
+}
+
+div.selectro-grid-option{
+    margin:0 10px 0 0;
+    text-align:center;
+}
+
+div.selectro-grid-option-label{
+    padding:6px 0 0 2px;
 }
 
 /* --------------- SELECTRO BASE STYLES ---------------- */
@@ -141,7 +162,7 @@ div.selectro.selected{
     border-bottom-color:rgb(222,222,222);
 }
 
-div.selectro-options{
+div.selectro-options-wrap{
     background:rgb(255,255,255);
     border-color:rgb(180,180,180);
     border-style:solid;
@@ -155,7 +176,40 @@ div.selectro-options{
     width:100%;
 }
 
-div.selectro-options > div, div.selectro-options > h6{
+div.selectro-options{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    cursor:default;
+    width:100%;
+}
+
+div.selectro-search-wrap{
+    border:rgba(180,180,180,0.7) 1px solid;
+    border-radius:3px;
+    margin:6px;
+}
+
+input.selectro-search{
+    box-sizing:border-box;
+    display:block;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    outline:none;
+    color:rgb(80,80,80);
+    border:none 0;
+    padding:4px 6px;
+    font-size:1.0em;
+}
+
+div.selectro-search-icon{
+    width:24px;height:24px;
+    background:transparent url(../img/Glass.png) no-repeat left -24px;
+}
+
+div.selectro-options div.selectro-option, div.selectro-options h6.selectro-optgroup-header{
     padding:6px 14px;
     background:transparent;
     color:rgb(80,80,80);
@@ -163,11 +217,93 @@ div.selectro-options > div, div.selectro-options > h6{
     letter-spacing:0.1em;
 }
 
-div.selectro-options > h6{
+div.selectro-options h6.selectro-optgroup-header{
     font-weight:600;
 }
 
-div.selectro-options > div:hover{
+div.selectro-options div.selectro-option:hover{
     background:rgb(228,94,0);
     color:white;
 }
+
+/* --------------- SELECTRO GRID BASE STYLES ---------------- */
+
+div.selectro-grid-wrap *{
+    box-sizing:border-box;
+}
+
+div.selectro-grid-wrap{
+    box-sizing:border-box;
+    overflow:auto;
+}
+
+div.selectro-grid{
+    overflow:auto;
+}
+
+div.selectro-grid-option{
+    float:left;
+    width:32px;height:32px;
+    background:rgb(255,255,255);
+    border:rgb(180,180,180) 1px solid;
+    border-radius:3px;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    cursor:pointer;
+}
+
+div.selectro-tile{
+    display:none;
+}
+
+div.selectro-tile-inner{
+
+}
+
+div.selectro-grid-option-label{
+    color:rgba(80,80,80,0.8);
+    font-size:1.2em;
+    letter-spacing:0.1em;
+}
+
+/*-- DISABLED OPTION --*/
+
+div.selectro-grid-option.disabled{
+    cursor:default;
+    background:rgba(255,255,255,0.6);
+    border-color:rgba(80,80,80,0.8);
+}
+
+div.selectro-grid-option.disabled div.selectro-tile{
+
+}
+
+div.selectro-grid-option.disabled div.selectro-tile-inner{
+
+}
+
+div.selectro-grid-option.disabled div.selectro-grid-option-label{
+    color:rgba(80,80,80,0.6);
+}
+
+/*-- SELECTED OPTION --*/
+
+div.selectro-grid-option.selected{
+    border-color:rgb(228,94,0);
+}
+
+div.selectro-grid-option.selected div.selectro-tile{
+
+}
+
+div.selectro-grid-option.selected div.selectro-tile-inner{
+
+}
+
+div.selectro-grid-option.selected div.selectro-grid-option-label{
+    color:rgba(80,80,80,1.0);
+}
+
+/* --------------- EOF ---------------- */
