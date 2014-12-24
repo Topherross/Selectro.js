@@ -11,6 +11,7 @@
             searchIcon:true,
             beforeInit:false,
             afterInit:false,
+            beforeSelect:false,
             afterSelect:false
         },
         objects = [],
@@ -117,6 +118,9 @@
 
         _select = function(el, i){
             if(objects.hasOwnProperty(i)){
+                if(typeof _configs.beforeSelect === "function")
+                    _configs.beforeSelect(objects[i], el);
+
                 objects[i].original_input.value = el.getAttribute("data-value");
 
                  _setText(objects[i].label, _getText(el));
@@ -138,6 +142,9 @@
                 return false;
 
             if(objects.hasOwnProperty(i)){
+                if(typeof _configs.beforeSelect === "function")
+                    _configs.beforeSelect(objects[i], el);
+
                 objects[i].original_input.value = el.getAttribute("data-value");console.log(objects[i].original_input.value);
 
                 for(var tile in objects[i].tiles){
@@ -166,8 +173,23 @@
         },
 
         _search = function(el, i){
-            if(el.value === "")
+            if(typeof i === "undefined")
                 return;
+
+            var matches = false;
+
+            for(var option in objects[i].options){
+                if(objects[i].options.hasOwnProperty(option)){
+                    var el_text = _getText(objects[i].options[option]).toLowerCase();
+                    if(el_text.indexOf(el.value.toLowerCase()) === -1){
+                        if(matches === false)
+                            matches = true;
+                        objects[i].options[option].style.display = "none";
+                    }else{
+                        objects[i].options[option].style.display = "block";
+                    }
+                }
+            }
 
             if(typeof console !== "undefined")
                 console.log(el.value, i);
@@ -196,7 +218,8 @@
                         label : _createEl('span', {'class':'selectro-label default'}),
                         arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
                         options_wrap : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options-wrap'}),
-                        new_options : _createEl('div', {'class':'selectro-options'})
+                        new_options : _createEl('div', {'class':'selectro-options'}),
+                        options : []
                     },
                     object_count = objects.length,
                     label = "Select an Option",
@@ -234,21 +257,23 @@
                             return;
                         }
 
-                        var new_a = _createEl('div', {'class':'selectro-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
+                        var new_option = _createEl('div', {'class':'selectro-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
 
-                        _setText(new_a, obj.firstChild.nodeValue);
-                        _objs.new_options.appendChild(new_a);
+                        _setText(new_option, obj.firstChild.nodeValue);
+                        _objs.new_options.appendChild(new_option);
 
                         if(_configs.links)
-                            new_a.addEventListener("click", function(){_link(this);});
+                            new_option.addEventListener("click", function(){_link(this);});
                         else
-                            new_a.addEventListener("click", function(){_select(this, object_count);});
+                            new_option.addEventListener("click", function(){_select(this, object_count);});
 
                         if(obj.hasAttribute('selected')){
-                            new_a.classList.add('selected');
+                            new_option.classList.add('selected');
                             _setText(_objs.label, _getText(obj));
                             _objs.label.classList.remove('default');
                         }
+
+                        _objs.options.push(new_option);
                     };
 
                     if(el.tagName.toLowerCase() === "optgroup"){
@@ -358,8 +383,6 @@
                         _create_obj(el);
                     }
                 });
-
-                // _setText(_objs.label, label);
 
                 if(typeof sibling !== "undefined")
                     obj.parentNode.insertBefore(_objs.grid_wrap, sibling);
