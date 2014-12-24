@@ -46,13 +46,13 @@
             </optgroup>
         </select>
         <label for="package_selector">Package</label>
-        <select name="package" id="package_selector" class="selectro">
+        <select name="package" id="package_selector" class="selectro-grid">
             <option>Select a Package</option>
             <option value="se">SE</option>
             <option value="ls">LS</option>
-            <option value="xi">XI</option>
+            <option value="xi" disabled="disabled">XI</option>
             <option value="gt">GT</option>
-            <option value="gtx">GTX</option>
+            <option value="gtx" disabled="disabled">GTX</option>
             <option value="gti">GTI</option>
         </select>
         <div class="submit-wrap">
@@ -83,8 +83,8 @@
                 },
                 submit = function(form){
                     for(var i = 0; i < form.length; i++){
-                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && typeof console !== "undefined")
-                            console.log(form[i].name+": "+form[i].value);
+//                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && typeof console !== "undefined")
+//                            console.log(form[i].name+": "+form[i].value);
                     }
                 },
                 init = function(){
@@ -100,17 +100,17 @@
                             form.insertBefore(header, form.children[0]);
                         },
                         afterInit:function(objs){
-                            if(typeof console !== "undefined")
-                                console.log(objs);
+//                            if(typeof console !== "undefined")
+//                                console.log(objs);
 
                             form.addEventListener('submit', function(){
                                 event.preventDefault();
                                 submit(form);
                             });
                         },
-                        afterSelect:function(obj){
-                            if(typeof console !== "undefined")
-                                console.log(obj);
+                        afterSelect:function(obj, target){
+//                            if(typeof console !== "undefined")
+//                                console.log(obj, target);
                         }
                     });
                     /*----- END SELECTRO INIT -----*/
