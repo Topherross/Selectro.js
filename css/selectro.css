@@ -209,6 +209,14 @@ div.selectro-search-icon{
     background:transparent url(../img/Glass.png) no-repeat left -24px;
 }
 
+div.selectro-no-matches{
+    padding:6px 14px;
+    background:transparent;
+    color:rgb(80,80,80);
+    font-size:1.2em;
+    letter-spacing:0.1em;
+}
+
 div.selectro-options div.selectro-option, div.selectro-options h6.selectro-optgroup-header{
     padding:6px 14px;
     background:transparent;

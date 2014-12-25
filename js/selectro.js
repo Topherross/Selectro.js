@@ -182,13 +182,20 @@
                 if(objects[i].options.hasOwnProperty(option)){
                     var el_text = _getText(objects[i].options[option]).toLowerCase();
                     if(el_text.indexOf(el.value.toLowerCase()) === -1){
-                        if(matches === false)
-                            matches = true;
                         objects[i].options[option].style.display = "none";
                     }else{
+                        if(matches === false)
+                            matches = true;
                         objects[i].options[option].style.display = "block";
                     }
                 }
+            }
+
+            if(!matches){console.log("No Matches");
+                _setText(objects[i].no_match, 'No options were found which match your search');
+                objects[i].new_options.appendChild(objects[i].no_match);
+            }else if(matches && objects[i].no_match.parentNode !== null){console.log("Matches");
+                objects[i].new_options.removeChild(objects[i].no_match);
             }
 
             if(typeof console !== "undefined")
@@ -229,6 +236,7 @@
                 if(_configs.searchable === true) {
                     _objs.search_wrap = _createEl('div', {'class':'selectro-search-wrap', 'style':'overflow:auto;'});
                     _objs.search = _createEl('input', {'class':'selectro-search', 'type':'text'});
+                    _objs.no_match = _createEl('div', {'class':'selectro-no-matches'});
                     _objs.options_wrap.appendChild(_objs.search_wrap);
 
                     if (_configs.searchIcon === true) {
@@ -239,8 +247,14 @@
                     _objs.search_wrap.appendChild(_objs.search);
 
                     _objs.search.addEventListener('keyup', function(){
-                        _search(this, object_count);
+                        var key = event.keyCode;
+                        if(key == 13 || key == 37 || key == 38 || key == 39 || key == 40){
+                            console.log(key);
+                        }else{
+                            _search(this, object_count);
+                        }
                     }, false);
+
                     _objs.search.addEventListener('paste', function(){
                         // @TODO: Timeout used until clipboardData is accessible in a consistent cross-browser environment. 12-24-2014
                         setTimeout(function(){
