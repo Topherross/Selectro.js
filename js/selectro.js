@@ -7,7 +7,6 @@
         _altclick = "click",
         _configs = {
             links:false,
-            searchIcon:true,
             beforeInit:false,
             afterInit:false,
             afterSelect:false
@@ -106,7 +105,7 @@
                 objects[i].new_options.appendChild(objects[i].no_match);
             }else if(matches && objects[i].no_match.parentNode !== null){
                 objects[i].new_options.removeChild(objects[i].no_match);
-            }
+            }console.log(objects[i].matches);
 
             return false;
         },
@@ -121,7 +120,8 @@
         },
 
         _highlightOption = function(obj_i, key){
-            var new_i;
+            var highlightd = (objects[obj_i].highlighted === -1)? 0 : objects[obj_i].highlighted,
+                new_i;console.log(objects[obj_i].matches.length);
 
             if(typeof key !== "undefined") {
                 if (key == 38)
@@ -250,10 +250,11 @@
                         options_wrap : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options-wrap'}),
                         new_options : _createEl('div', {'class':'selectro-options'}),
                         options : [],
+                        highlighted : -1,
                         searchable : obj.classList.contains('searchable')
                     },
                     object_count = objects.length,
-                    label = "Select an Option",
+                    label = (obj.hasAttribute('data-label'))? obj.getAttribute('data-label') : "Select an Option",
                     select_children = obj.children,
                     sibling = obj.nextElementSibling;
 
@@ -262,25 +263,11 @@
                     _objs.search = _createEl('input', {'class':'selectro-search', 'type':'text'});
                     _objs.search_icon = _createEl('div', {'class':'selectro-search-icon', 'style':'float:right;'});
                     _objs.no_match = _createEl('div', {'class':'selectro-no-matches'});
-                    _objs.higlighted = 0;
                     _objs.matches = [];
 
                     _objs.options_wrap.appendChild(_objs.search_wrap);
                     _objs.search_wrap.appendChild(_objs.search_icon);
                     _objs.search_wrap.appendChild(_objs.search);
-
-                    _objs.search.addEventListener('keyup', function(){
-                        var keys = [37, 38, 39, 40],
-                            key = event.keyCode;
-
-                        if(keys.indexOf(key) === -1)
-                            _search(this, object_count);
-                    }, false);
-
-                    _objs.search.addEventListener('keydown', function(){
-                        if(event.keyCode == 13)
-                            _select(_objs.options[_objs.highlighted], object_count);
-                    }, false);
 
                     _objs.search.addEventListener('paste', function(){
                         // @TODO: Timeout used until clipboardData is accessible in a consistent cross-browser environment. 12-24-2014
@@ -290,7 +277,7 @@
                     }, false);
 
                     _objs.search.addEventListener('focus', function(){
-                        _search(_objs.search);
+                        _search(_objs.search, object_count);
                     });
                 }
 
@@ -298,7 +285,8 @@
                     var _create_obj = function(obj){
                         if(!obj.hasAttribute('value')){
                             if(obj === select_children[0]){
-                                label = el.value;
+                                if(label === "Select an Option")
+                                    label = el.value;
                                 _objs.original_input.value = "";
                             }
                             return;
@@ -306,7 +294,7 @@
 
                         var new_option = _createEl('div', {'class':'selectro-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
 
-                        _setText(new_option, obj.firstChild.nodeValue);
+                        _setText(new_option, _getText(obj));
                         _objs.new_options.appendChild(new_option);
 
                         if(_configs.links)
@@ -368,15 +356,24 @@
                     e.stopPropagation();
                     _toggleOptions(object_count);
                 }, false);
+
                 document.addEventListener('click', function(){
                     _hideOptions();
                 }, false);
+
                 window.addEventListener('keyup', function(){
                     var keys = [38, 40],
                         key = event.keyCode;
 
                     if(keys.indexOf(key) !== -1)
                         _highlightOption(object_count, key);
+                    else if(_objs.searchable === true && _objs.search === document.activeElement)
+                        _search(_objs.search, object_count);
+                }, false);
+
+                window.addEventListener('keydown', function(){
+                    if(event.keyCode == 13 && _objs.highlighted !== -1)
+                        _select(_objs.options[_objs.highlighted], object_count);
                 }, false);
 
                 objects.push(_objs);
@@ -401,8 +398,12 @@
 
                 [].forEach.call(select_children, function(el){
                     var _create_obj = function(obj){
-                        if(!obj.hasAttribute('value'))
+                        if(!obj.hasAttribute('value')){
+                            if(obj === select_children[0]){
+                                _objs.original_input.value = "";
+                            }
                             return;
+                        }
 
                         var new_option = _createEl('div', {'class':'selectro-grid-option', 'style': 'display:block;position:relative;', 'data-value': obj.value}),
                             tile = _createEl('div', {'class':'selectro-tile'}),

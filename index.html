@@ -13,7 +13,7 @@
     <body>
     <form action="" method="post" id="car_form">
         <label for="year_selector">Year</label>
-        <select name="year" id="year_selector" class="selectro">
+        <select name="year" id="year_selector" class="selectro" data-label="Select a Year">
             <option>Select a Year</option>
             <option value="2007">2007</option>
             <option value="2008">2008</option>
@@ -110,10 +110,6 @@
                                 event.preventDefault();
                                 submit(form);
                             });
-                        },
-                        beforeSelect:function(obj, target){
-                            if(typeof console !== "undefined")
-                                console.log(obj, target);
                         },
                         afterSelect:function(obj, target){
                             if(typeof console !== "undefined")
