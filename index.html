@@ -26,11 +26,11 @@
             <option value="2015">2015</option>
         </select>
         <label for="car_selector">Vehicle</label>
-        <select name="car" id="car_selector" class="selectro">
+        <select name="car" id="car_selector" class="selectro searchable">
             <option>Select a Vehicle</option>
             <optgroup label="European Cars">
                 <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
+                <option value="saab" disabled="disabled">Saab</option>
                 <option value="mercedes">Mercedes</option>
                 <option value="audi">Audi</option>
                 <option value="volkswagen">Volkswagen</option>
@@ -41,7 +41,7 @@
             <optgroup label="Japanese Cars">
                 <option value="lancer">Lancer</option>
                 <option value="gtr">GTR SPEC-V</option>
-                <option value="supra">Supra</option>
+                <option value="supra" disabled="disabled">Supra</option>
                 <option value="nsx">NSX</option>
             </optgroup>
         </select>
@@ -83,8 +83,8 @@
                 },
                 submit = function(form){
                     for(var i = 0; i < form.length; i++){
-//                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && typeof console !== "undefined")
-//                            console.log(form[i].name+": "+form[i].value);
+                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && typeof console !== "undefined")
+                            console.log(form[i].name+": "+form[i].value);
                     }
                 },
                 init = function(){
@@ -93,6 +93,9 @@
 
                     /*----- BEGIN SELECTRO INIT -----*/
                     selectro.init({
+                        links:false,
+                        searchable:true,
+                        searchIcon:true,
                         beforeInit:function(){
                             var header = document.createElement('h1');
 

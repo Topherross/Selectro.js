@@ -229,9 +229,16 @@ div.selectro-options h6.selectro-optgroup-header{
     font-weight:600;
 }
 
+div.selectro-options div.selectro-option.highlighted,
 div.selectro-options div.selectro-option:hover{
     background:rgb(228,94,0);
     color:white;
+}
+
+div.selectro-options div.selectro-option.disabled,
+div.selectro-options div.selectro-option.disabled:hover{
+    background:transparent;
+    color:rgba(80,80,80,0.6);
 }
 
 /* --------------- SELECTRO GRID BASE STYLES ---------------- */
