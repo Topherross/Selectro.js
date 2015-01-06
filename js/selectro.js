@@ -14,15 +14,19 @@
         objects = [],
 
         _browser = function(){
-            var user_agent = navigator.userAgent,
-                browser = "default";
+            var browser = {
+                    name : "default"
+                },
+                user_agent = navigator.userAgent;
 
             if(user_agent.match(/iPhone|iPod|iPad|Android|Blackberry|Opera Mini|Opera Mobi/i)) {
                 _clickfunc = 'touchstart';
                 _altclick = 'touchend';
-                browser = 'mobile';
+                browser.name = 'mobile';
             } else if (user_agent.indexOf("MSIE") > -1) {
-                browser = "msie";
+                var match = user_agent.match(/(?:msie |rv:)(\d+(\.\d+)?)/i);
+                browser.name = "msie";
+                browser.version = (match && match.length > 1 && match[1]) || '';
             }
 
             return browser;
@@ -120,17 +124,17 @@
         },
 
         _highlightOption = function(obj_i, key){
-            var highlightd = (objects[obj_i].highlighted === -1)? 0 : objects[obj_i].highlighted,
-                new_i;console.log(objects[obj_i].matches.length);
+            var highlighted = (objects[obj_i].highlighted === -1)? objects[obj_i].matches[0] : objects[obj_i].highlighted,
+                new_i;
 
             if(typeof key !== "undefined") {
                 if (key == 38)
-                    new_i = (objects[obj_i].highlighted == 0) ? objects[obj_i].matches[0] : objects[obj_i].matches[objects[obj_i].highlighted - 1];
+                    new_i = (highlighted == objects[obj_i].matches[0]) ? objects[obj_i].matches[0] : objects[obj_i].matches[objects[obj_i].highlighted - 1];
                 if (key == 40)
-                    new_i = ((objects[obj_i].highlighted + 1) > (objects[obj_i].matches.length - 1)) ? objects[obj_i].matches[objects[obj_i].matches.length - 1] : objects[obj_i].matches[objects[obj_i].highlighted + 1];
+                    new_i = ((highlighted + 1) > (objects[obj_i].matches.length - 1)) ? objects[obj_i].matches[objects[obj_i].matches.length - 1] : objects[obj_i].matches[objects[obj_i].highlighted + 1];
             }else{
                 new_i = 0;
-            }
+            }console.log(typeof new_i, new_i);
 
             objects[obj_i].highlighted = new_i;
             _batchRemoveClass(objects[obj_i].options, 'highlighted');
@@ -215,10 +219,8 @@
         },
 
         _link = function(el){
-            var link = el.getAttribute("data-value");
-
-            if(typeof link !== "undefined")
-                window.location.assign(link);
+            if(el.hasAttribute("data-value"))
+                window.location.assign(el.getAttribute("data-value"));
 
             return false;
         },
@@ -244,7 +246,7 @@
                 var _objs = {
                         original_input : obj,
                         select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'position:relative;'}),
-                        new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':obj.classList, 'id':(obj.hasAttribute('id'))? 'selectro_'+obj.getAttribute('id') : 'selectro_'+index}),
+                        new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':obj.classList, 'id':(obj.hasAttribute('id'))? 'selectro_'+obj.getAttribute('id') : 'selectro_'+index, 'tabindex':(obj.hasAttribute('tabindex'))? obj.getAttribute('tabindex') : (index + 1)}),
                         label : _createEl('span', {'class':'selectro-label default'}),
                         arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
                         options_wrap : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options-wrap'}),
@@ -462,9 +464,11 @@
 
     selectro.init = function(configs){
         var selects = document.querySelectorAll(".selectro"),
-            grids = document.querySelectorAll(".selectro-grid");
+            grids = document.querySelectorAll(".selectro-grid"),
+            browser = _browser();
 
-        if(selects.length === 0 && grids.length === 0)
+        if((selects.length === 0 && grids.length === 0) ||
+            (browser.name === "msie" && parseFloat(browser.version) <= 9))
             return;
 
         if(typeof configs !== "undefined" && typeof configs === "object")
@@ -473,7 +477,7 @@
         if(typeof _configs.beforeInit === "function")
             _configs.beforeInit();
 
-        if(_browser() === "mobile" && selects.length > 0){
+        if(browser.name === "mobile" && selects.length > 0){
             _buildMobile(selects);
             return;
         }

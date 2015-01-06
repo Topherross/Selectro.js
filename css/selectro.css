@@ -144,6 +144,13 @@ div.selectro{
     letter-spacing:0.1em;
 }
 
+div.selectro:focus{
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    outline:none;
+}
+
 div.selectro span.selectro-label{
     color:rgb(80,80,80);
 }
