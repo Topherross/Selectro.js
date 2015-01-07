@@ -2,7 +2,6 @@
     'use strict';
 
     var selectro = {},
-
         _clickfunc = "click",
         _altclick = "click",
         _configs = {
@@ -11,6 +10,7 @@
             afterInit:false,
             afterSelect:false
         },
+        types = ['list', 'grid'],
         objects = [],
 
         _browser = function(){
@@ -25,7 +25,7 @@
                 browser.name = 'mobile';
             } else if (user_agent.indexOf("MSIE") > -1) {
                 var match = user_agent.match(/(?:msie |rv:)(\d+(\.\d+)?)/i);
-                browser.name = "msie";
+                browser.name = 'msie';
                 browser.version = (match && match.length > 1 && match[1]) || '';
             }
 
@@ -40,14 +40,6 @@
             }
         },
 
-        _createEl = function(type, attrs){
-            var el = document.createElement(type);
-            if(typeof attrs !== "undefined")
-                _setAttributes(el, attrs);
-
-            return el;
-        },
-
         _setAttributes = function(el, attrs){
             for(var attr in attrs){
                 if(attrs.hasOwnProperty(attr))
@@ -55,6 +47,14 @@
             }
 
             return false;
+        },
+
+        _createEl = function(type, attrs){
+            var el = document.createElement(type);
+            if(typeof attrs !== "undefined")
+                _setAttributes(el, attrs);
+
+            return el;
         },
 
         _setText = function(el, text, html){
@@ -179,42 +179,23 @@
                 return false;
 
             if(objects.hasOwnProperty(i)){
-
-                objects[i].original_input.value = el.getAttribute("data-value");
-                 _setText(objects[i].label, _getText(el));
-
-                if(objects[i].label.classList.contains('default'))
-                    objects[i].label.classList.remove('default');
-
-                _toggleOptions(i);
-
-                if(typeof _configs.afterSelect === "function")
-                    _configs.afterSelect(objects[i], el);
-            }
-
-            return false;
-        },
-
-        _selectTile = function(el, i){
-            if(el.hasAttribute("data-disabled") && el.getAttribute("data-disabled") === "disabled")
-                return false;
-
-            if(objects.hasOwnProperty(i)){
-
                 objects[i].original_input.value = el.getAttribute("data-value");
 
-                for(var tile in objects[i].tiles){
-                    if(objects[i].tiles.hasOwnProperty(tile) && objects[i].tiles[tile].classList.contains('selected')){
-                        objects[i].tiles[tile].classList.remove('selected');
-                    }
+                if(el.classList.contains('selectro-grid-option')){
+                    _batchRemoveClass(objects[i].tiles, 'selected');
+                    el.classList.add('selected');
+                }else if(el.classList.contains('selectro-option')){
+                     _setText(objects[i].label, _getText(el));
+
+                    if(objects[i].label.classList.contains('default'))
+                        objects[i].label.classList.remove('default');
+
+                    _toggleOptions(i);
                 }
 
-                el.classList.add('selected');
-
                 if(typeof _configs.afterSelect === "function")
                     _configs.afterSelect(objects[i], el);
             }
-
             return false;
         },
 
@@ -241,12 +222,22 @@
             return false;
         },
 
-        _buildLists = function(objs){
+        _build = function(objs, type){console.log(typeof objs[0], objs[0], objs.length);
+            if(types.indexOf(type) === -1)
+                return false;
+
             [].forEach.call(objs, function(obj, index){
-                var _objs = {
+                var _objs,
+                    object_count = objects.length,
+                    label = (obj.hasAttribute('data-label'))? obj.getAttribute('data-label') : "Select an Option",
+                    select_children = obj.children,
+                    sibling = obj.nextElementSibling;
+
+                if(type === 'list'){
+                    _objs = {
                         original_input : obj,
                         select_wrap : _createEl('div', {'class':'selectro-wrap', 'style':'position:relative;'}),
-                        new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':obj.classList, 'id':(obj.hasAttribute('id'))? 'selectro_'+obj.getAttribute('id') : 'selectro_'+index, 'tabindex':(obj.hasAttribute('tabindex'))? obj.getAttribute('tabindex') : (index + 1)}),
+                        new_select : _createEl('div', {'style':'overflow:visible;position:relative;', 'class':obj.classList, 'id':(obj.hasAttribute('id'))? 'selectro_'+obj.getAttribute('id') : 'selectro_'+index, 'tabindex':(obj.hasAttribute('tabindex'))? obj.getAttribute('tabindex') : ""}),
                         label : _createEl('span', {'class':'selectro-label default'}),
                         arrow : _createEl('span', {'class':'selectro-arrow', 'style':'display:inline-block;position:relative;vertical-align:middle;border-color:rgb(140,140,140) transparent transparent transparent;border-width:7px 5px 0 5px;border-style:solid;width:0;height:0;'}),
                         options_wrap : _createEl('div', {'style':'position:absolute;display:none;', 'class':'selectro-options-wrap'}),
@@ -254,82 +245,116 @@
                         options : [],
                         highlighted : -1,
                         searchable : obj.classList.contains('searchable')
-                    },
-                    object_count = objects.length,
-                    label = (obj.hasAttribute('data-label'))? obj.getAttribute('data-label') : "Select an Option",
-                    select_children = obj.children,
-                    sibling = obj.nextElementSibling;
+                    };
 
-                if(_objs.searchable) {
-                    _objs.search_wrap = _createEl('div', {'class':'selectro-search-wrap', 'style':'overflow:auto;'});
-                    _objs.search = _createEl('input', {'class':'selectro-search', 'type':'text'});
-                    _objs.search_icon = _createEl('div', {'class':'selectro-search-icon', 'style':'float:right;'});
-                    _objs.no_match = _createEl('div', {'class':'selectro-no-matches'});
-                    _objs.matches = [];
+                    if(_objs.searchable) {
+                        _objs.search_wrap = _createEl('div', {'class':'selectro-search-wrap', 'style':'overflow:auto;'});
+                        _objs.search = _createEl('input', {'class':'selectro-search', 'type':'text'});
+                        _objs.search_icon = _createEl('div', {'class':'selectro-search-icon', 'style':'float:right;'});
+                        _objs.no_match = _createEl('div', {'class':'selectro-no-matches'});
+                        _objs.matches = [];
 
-                    _objs.options_wrap.appendChild(_objs.search_wrap);
-                    _objs.search_wrap.appendChild(_objs.search_icon);
-                    _objs.search_wrap.appendChild(_objs.search);
+                        _objs.options_wrap.appendChild(_objs.search_wrap);
+                        _objs.search_wrap.appendChild(_objs.search_icon);
+                        _objs.search_wrap.appendChild(_objs.search);
 
-                    _objs.search.addEventListener('paste', function(){
-                        // @TODO: Timeout used until clipboardData is accessible in a consistent cross-browser environment. 12-24-2014
-                        setTimeout(function(){
+                        _objs.search.addEventListener('paste', function(){
+                            // @TODO: Timeout used until clipboardData is accessible in a consistent cross-browser environment. 12-24-2014
+                            setTimeout(function(){
+                                _search(_objs.search, object_count);
+                            }, 20);
+                        }, false);
+
+                        _objs.search.addEventListener('focus', function(){
                             _search(_objs.search, object_count);
-                        }, 20);
-                    }, false);
-
-                    _objs.search.addEventListener('focus', function(){
-                        _search(_objs.search, object_count);
-                    });
+                        });
+                    }
+                }else if(type === 'grid'){
+                    _objs = {
+                        original_input : obj,
+                        select_wrap : _createEl('div', {'class':'selectro-grid-wrap', 'style':'position:relative;'}),
+                        grid : _createEl('div', {'class':'selectro-grid'}),
+                        tiles : []
+                    };
                 }
 
                 [].forEach.call(select_children, function(el){
                     var _create_obj = function(obj){
                         if(!obj.hasAttribute('value')){
                             if(obj === select_children[0]){
-                                if(label === "Select an Option")
-                                    label = el.value;
                                 _objs.original_input.value = "";
                             }
                             return;
                         }
 
-                        var new_option = _createEl('div', {'class':'selectro-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
+                        var new_option;
 
-                        _setText(new_option, _getText(obj));
-                        _objs.new_options.appendChild(new_option);
+                        if(type === 'list'){
+                            new_option = _createEl('div', {'class':'selectro-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
 
-                        if(_configs.links)
-                            new_option.addEventListener("click", function(){_link(this);});
-                        else
+                            _setText(new_option, _getText(obj));
+                            _objs.new_options.appendChild(new_option);
+
+                            if(_configs.links)
+                                new_option.addEventListener("click", function(){_link(this);});
+                            else
+                                new_option.addEventListener("click", function(){_select(this, object_count);});
+
+                            if(obj.hasAttribute('selected') && !obj.hasAttribute('disabled')){
+                                new_option.classList.add('selected');
+                                _setText(_objs.label, _getText(obj));
+                                _objs.label.classList.remove('default');
+                            }else if(obj.hasAttribute('disabled')){
+                                _setAttributes(new_option, {'data-disabled':'disabled'});
+                                new_option.classList.add('disabled');
+                            }
+
+                            _objs.options.push(new_option);
+
+                            if(_objs.searchable) {
+                                if(_objs.options.length == 1)
+                                    _objs.matches.push(0);
+                                else
+                                    _objs.matches.push(parseInt(_objs.options.length - 1));
+                            }
+                        }else if(type === 'grid'){
+                            new_option = _createEl('div', {'class':'selectro-grid-option', 'style': 'display:block;position:relative;', 'data-value': obj.value});
+
+                            var tile = _createEl('div', {'class':'selectro-tile'}),
+                                tile_inner = _createEl('div', {'class':'selectro-tile-inner'}),
+                                tile_label = _createEl('div', {'class':'selectro-grid-option-label'});
+
+                            _setText(tile_label, obj.firstChild.nodeValue);
+                            _objs.grid.appendChild(new_option);
+                            new_option.appendChild(tile_label);
+                            new_option.appendChild(tile);
+                            tile.appendChild(tile_inner);
+
                             new_option.addEventListener("click", function(){_select(this, object_count);});
 
-                        if(obj.hasAttribute('selected') && !obj.hasAttribute('disabled')){
-                            new_option.classList.add('selected');
-                            _setText(_objs.label, _getText(obj));
-                            _objs.label.classList.remove('default');
-                        }else if(obj.hasAttribute('disabled')){
-                            _setAttributes(new_option, {'data-disabled':'disabled'});
-                            new_option.classList.add('disabled');
+                            if(obj.hasAttribute('selected') && !obj.hasAttribute('disabled')){
+                                new_option.classList.add('selected');
+                            }else if(obj.hasAttribute('disabled')){
+                                _setAttributes(new_option, {'data-disabled':'disabled'});
+                                new_option.classList.add('disabled');
+                            }
+
+                            _objs.tiles.push(new_option);
                         }
-
-                        _objs.options.push(new_option);
-
-                        if(_objs.searchable) {
-                            if(_objs.options.length == 1)
-                                _objs.matches.push(0);
-                            else
-                                _objs.matches.push(parseInt(_objs.options.length - 1));
-                        }
-
                     };
 
                     if(el.tagName.toLowerCase() === "optgroup"){
                         if(typeof el.getAttribute("label") !== "undefined"){
-                            var opt_header = _createEl("h6", {'class':'selectro-optgroup-header'});
+                            var opt_header = _createEl("h6");
 
-                            _setText(opt_header, el.getAttribute("label"));
-                            _objs.new_options.appendChild(opt_header);
+                            if(type === 'list'){
+                                _setAttributes(opt_header, {'class':'selectro-optgroup-header'});
+                                _setText(opt_header, el.getAttribute("label"));
+                                _objs.new_options.appendChild(opt_header);
+                            }else if(type === 'grid'){
+                                _setAttributes(opt_header, {'class':'selectro-grid-optgroup-header'});
+                                _objs.grid.appendChild(opt_header);
+                            }
                         }
 
                         [].forEach.call(el.children, function(child){
@@ -339,123 +364,49 @@
                         _create_obj(el);
                     }
                 });
-
-                _setText(_objs.label, label);
 
                 if(typeof sibling !== "undefined")
                     obj.parentNode.insertBefore(_objs.select_wrap, sibling);
                 else
                     obj.parentNode.appendChild(_objs.select_wrap);
 
-                _objs.select_wrap.appendChild(_objs.new_select);
-                _objs.select_wrap.appendChild(_objs.options_wrap);
-                _objs.options_wrap.appendChild(_objs.new_options);
+                if(type === 'list'){
+                    _setText(_objs.label, label);
+                    _objs.select_wrap.appendChild(_objs.new_select);
+                    _objs.select_wrap.appendChild(_objs.options_wrap);
+                    _objs.options_wrap.appendChild(_objs.new_options);
 
-                _objs.new_select.appendChild(_objs.label);
-                _objs.new_select.appendChild(_objs.arrow);
+                    _objs.new_select.appendChild(_objs.label);
+                    _objs.new_select.appendChild(_objs.arrow);
 
-                _objs.new_select.addEventListener('click', function(e){
-                    e.stopPropagation();
-                    _toggleOptions(object_count);
-                }, false);
+                    _objs.new_select.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        _toggleOptions(object_count);
+                    }, false);
 
-                document.addEventListener('click', function(){
-                    _hideOptions();
-                }, false);
+                    document.addEventListener('click', function () {
+                        _hideOptions();
+                    }, false);
 
-                window.addEventListener('keyup', function(){
-                    var keys = [38, 40],
-                        key = event.keyCode;
+                    window.addEventListener('keyup', function () {
+                        var keys = [38, 40],
+                            key = event.keyCode;
 
-                    if(keys.indexOf(key) !== -1)
-                        _highlightOption(object_count, key);
-                    else if(_objs.searchable === true && _objs.search === document.activeElement)
-                        _search(_objs.search, object_count);
-                }, false);
+                        if (keys.indexOf(key) !== -1)
+                            _highlightOption(object_count, key);
+                        else if (_objs.searchable === true && _objs.search === document.activeElement)
+                            _search(_objs.search, object_count);
+                    }, false);
 
-                window.addEventListener('keydown', function(){
-                    if(event.keyCode == 13 && _objs.highlighted !== -1)
-                        _select(_objs.options[_objs.highlighted], object_count);
-                }, false);
-
-                objects.push(_objs);
-
-                obj.style.display = "none";
-            });
-
-            return false;
-        },
-
-        _buildGrids = function(objs){
-            [].forEach.call(objs, function(obj, index){
-                var _objs = {
-                        original_input : obj,
-                        grid_wrap : _createEl('div', {'class':'selectro-grid-wrap', 'style':'position:relative;'}),
-                        grid : _createEl('div', {'class':'selectro-grid'}),
-                        tiles : []
-                    },
-                    object_count = objects.length,
-                    select_children = obj.children,
-                    sibling = obj.nextElementSibling;
-
-                [].forEach.call(select_children, function(el){
-                    var _create_obj = function(obj){
-                        if(!obj.hasAttribute('value')){
-                            if(obj === select_children[0]){
-                                _objs.original_input.value = "";
-                            }
-                            return;
-                        }
-
-                        var new_option = _createEl('div', {'class':'selectro-grid-option', 'style': 'display:block;position:relative;', 'data-value': obj.value}),
-                            tile = _createEl('div', {'class':'selectro-tile'}),
-                            tile_inner = _createEl('div', {'class':'selectro-tile-inner'}),
-                            tile_label = _createEl('div', {'class':'selectro-grid-option-label'});
-
-                        _setText(tile_label, obj.firstChild.nodeValue);
-                        _objs.grid.appendChild(new_option);
-                        new_option.appendChild(tile_label);
-                        new_option.appendChild(tile);
-                        tile.appendChild(tile_inner);
-
-                        new_option.addEventListener("click", function(){
-                            _selectTile(this, object_count);
-                        });
-
-                        if(obj.hasAttribute('selected') && !obj.hasAttribute('disabled')){
-                            new_option.classList.add('selected');
-                        }else if(obj.hasAttribute('disabled')){
-                            _setAttributes(new_option, {'data-disabled':'disabled'});
-                            new_option.classList.add('disabled');
-                        }
-
-                        _objs.tiles.push(new_option);
-                    };
-
-                    if(el.tagName.toLowerCase() === "optgroup"){
-                        if(typeof el.getAttribute("label") !== "undefined"){
-                            var opt_header = _createEl("h6", {'class':'selectro-grid-optgroup-header'});
-
-                            _objs.grid.appendChild(opt_header);
-                        }
-
-                        [].forEach.call(el.children, function(child){
-                            _create_obj(child);
-                        });
-                    }else{
-                        _create_obj(el);
-                    }
-                });
-
-                if(typeof sibling !== "undefined")
-                    obj.parentNode.insertBefore(_objs.grid_wrap, sibling);
-                else
-                    obj.parentNode.appendChild(_objs.grid_wrap);
-
-                _objs.grid_wrap.appendChild(_objs.grid);
+                    window.addEventListener('keydown', function () {
+                        if (event.keyCode == 13 && _objs.highlighted !== -1)
+                            _select(_objs.options[_objs.highlighted], object_count);
+                    }, false);
+                }else if(type === 'grid'){
+                    _objs.select_wrap.appendChild(_objs.grid);
+                }
 
                 objects.push(_objs);
-
                 obj.style.display = "none";
             });
 
@@ -469,7 +420,7 @@
 
         if((selects.length === 0 && grids.length === 0) ||
             (browser.name === "msie" && parseFloat(browser.version) <= 9))
-            return;
+            return false;
 
         if(typeof configs !== "undefined" && typeof configs === "object")
             _setConfigs(configs);
@@ -479,13 +430,13 @@
 
         if(browser.name === "mobile" && selects.length > 0){
             _buildMobile(selects);
-            return;
+            return false;
         }
 
         if(selects.length > 0)
-            _buildLists(selects);
+            _build(selects, 'list');
         if(grids.length > 0)
-            _buildGrids(grids);
+            _build(grids, 'grid');
 
         if(typeof _configs.afterInit === "function")
             _configs.afterInit(objects);
