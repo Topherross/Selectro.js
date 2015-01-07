@@ -162,7 +162,7 @@
             objects[i].options_wrap.style.display = (objects[i].options_wrap.style.display === "block")? "none" : "block" ;
             objects[i].options_wrap.style.zIndex = (objects[i].options_wrap.style.display === "block")? "10000" : "auto" ;
             objects[i].new_select.classList.toggle('selected');
-            objects[i].options_wrap.addEventListener('click', function(e){e.stopPropagation();});
+            objects[i].options_wrap.addEventListener('click', function(event){event.stopPropagation();});
 
             if(objects[i].options_wrap.style.display === "block" && objects[i].searchable){
                 _resetSearch(i);
@@ -311,7 +311,7 @@
 
                             _objs.options.push(new_option);
 
-                            if(_objs.searchable) {
+                            if(_objs.searchable && !obj.hasAttribute('disabled')) {
                                 if(_objs.options.length == 1)
                                     _objs.matches.push(0);
                                 else
@@ -379,18 +379,18 @@
                     _objs.new_select.appendChild(_objs.label);
                     _objs.new_select.appendChild(_objs.arrow);
 
-                    _objs.new_select.addEventListener('click', function (e) {
-                        e.stopPropagation();
+                    _objs.new_select.addEventListener('click', function(event){
+                        event.stopPropagation();
                         _toggleOptions(object_count);
                     }, false);
 
-                    document.addEventListener('click', function () {
+                    document.addEventListener('click', function(){
                         _hideOptions();
                     }, false);
 
-                    window.addEventListener('keyup', function () {
+                    window.addEventListener('keyup', function(event){
                         var keys = [38, 40],
-                            key = event.keyCode;
+                            key = event.keyCode || event.which;
 
                         if (keys.indexOf(key) !== -1)
                             _highlightOption(object_count, key);
@@ -398,8 +398,9 @@
                             _search(_objs.search, object_count);
                     }, false);
 
-                    window.addEventListener('keydown', function () {
-                        if (event.keyCode == 13 && _objs.highlighted !== -1)
+                    window.addEventListener('keydown', function(event){
+                        var key = event.keyCode || event.which;
+                        if (key == 13 && _objs.highlighted !== -1)
                             _select(_objs.options[_objs.highlighted], object_count);
                     }, false);
                 }else if(type === 'grid'){
