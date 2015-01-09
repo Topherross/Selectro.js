@@ -109,7 +109,7 @@
                 objects[i].new_options.appendChild(objects[i].no_match);
             }else if(matches && objects[i].no_match.parentNode !== null){
                 objects[i].new_options.removeChild(objects[i].no_match);
-            }console.log(objects[i].matches);
+            }
 
             return false;
         },
@@ -134,7 +134,7 @@
                     new_i = ((highlighted + 1) > (objects[obj_i].matches.length - 1)) ? objects[obj_i].matches[objects[obj_i].matches.length - 1] : objects[obj_i].matches[objects[obj_i].highlighted + 1];
             }else{
                 new_i = 0;
-            }console.log(typeof new_i, new_i);
+            }
 
             objects[obj_i].highlighted = new_i;
             _batchRemoveClass(objects[obj_i].options, 'highlighted');
@@ -222,11 +222,14 @@
             return false;
         },
 
-        _build = function(objs, type){console.log(typeof objs[0], objs[0], objs.length);
+        _build = function(objs, type){
             if(types.indexOf(type) === -1)
                 return false;
 
             [].forEach.call(objs, function(obj, index){
+                if(obj.hasAttribute("data-selectro-built") && obj.getAttribute("data-selectro-built") === "true")
+                    return;
+
                 var _objs,
                     object_count = objects.length,
                     label = (obj.hasAttribute('data-label'))? obj.getAttribute('data-label') : "Select an Option",
@@ -408,6 +411,7 @@
                 }
 
                 objects.push(_objs);
+                obj.setAttribute("data-selectro-built", "true");
                 obj.style.display = "none";
             });
 
