@@ -28,26 +28,10 @@ Another option available is to make a Selectro grid. A grid Selectro can be styl
 In your document ready function, call `selectro.init();`
 
 There are four configuration options available when calling `selectro.init();`
-<br/><br/>
-<table>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>links</td>
-<td>The links option turns a Selectro list into a drop-down menu. To make this work you must use a URL as the value attribute in the original select options. The default is false. Expects boolean true, or false.</td>
-</tr>
-<tr>
-<td>beforeInit</td>
-<td>The beforeInit option is a callback function that runs before Selectro actually runs the init function. The default is false. Expects a function.</td>
-</tr>
-<tr>
-<td>afterInit</td>
-<td>The afterInit option is a callback function that runs right after Selectro runs the init function. The default is false. Expects a function. Passes all Selectro elements in an array as a method variable.</td>
-</tr>
-<tr>
-<td>afterSelect</td>
-<td>The afterSelect option is a callback function that runs after every Selctro element has an option selected. The default is false. Expects a function. Passes all Selectro elements in an array as the first method variable, and the selected element as the second variable.</td>
-</tr>
-</table>
+
+| Option | Description |
+| ------- | ------------ |
+| links | The links option turns a Selectro list into a drop-down menu. To make this work you must use a URL as the value attribute in the original select options. The default is false. Expects boolean true, or false. |
+| beforeInit | The beforeInit option is a callback function that runs before Selectro actually runs the init function. The default is false. Expects a function. |
+| afterInit | The afterInit option is a callback function that runs right after Selectro runs the init function. The default is false. Expects a function. Passes all Selectro elements in an array as a method variable. |
+| afterSelect | The afterSelect option is a callback function that runs after every Selctro element has an option selected. The default is false. Expects a function. Passes all Selectro elements in an array as the first method variable, and the selected element as the second variable. |

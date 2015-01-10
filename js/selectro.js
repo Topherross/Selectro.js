@@ -443,6 +443,8 @@
         if(grids.length > 0)
             _build(grids, 'grid');
 
+        console.log(this.__proto__);
+
         if(typeof _configs.afterInit === "function")
             _configs.afterInit(objects);
 
