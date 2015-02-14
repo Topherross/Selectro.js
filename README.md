@@ -15,23 +15,18 @@ The default option is to create a select widget that acts like a select element,
 1. To use Selectro add selectro.js to the head of your application.
 2. Add the class `selectro` to select elements that you wish to turn into Selectro drop-downs.
 3. If you would like to add search functionality to a specific Selctro drop-down add the class `searchable` to the original select.
-4. The default label for a Selectro drop-down "Choose an Option". To change the default label add `data-label="Your Custom Label"` to the original select.
-
-#### Selectro Grids
-
-Another option available is to make a Selectro grid. A grid Selectro can be styled like a group of checkboxes.  
-
-1. To create a Selectro grid just add the class `selectro-grid` original select element.
+4. The default label for a Selectro drop-down "Choose an Option". To change the default label add `data-label="Your Custom Label"` to the original select. Setting this data attribute overrides the global `label` option for that select only.
+5. Multiple selects are supported! Nothing additional is required to initialize a multiple select. Multiple selects do not require the `searchable` class as Selectro Multi-Selects automatically get a search box.
 
 #### Initializing Selectro
 
-In your document ready function, call `selectro.init();`
+In your document ready function, call `selectro();`
 
-There are four configuration options available when calling `selectro.init();`
+There are four configuration options available when calling `selectro();`
 
-| Option | Description |
-| ------- | ------------ |
-| links | The links option turns a Selectro list into a drop-down menu. To make this work you must use a URL as the value attribute in the original select options. The default is false. Expects boolean true, or false. |
-| beforeInit | The beforeInit option is a callback function that runs before Selectro actually runs the init function. The default is false. Expects a function. |
-| afterInit | The afterInit option is a callback function that runs right after Selectro runs the init function. The default is false. Expects a function. Passes all Selectro elements in an array as a method variable. |
-| afterSelect | The afterSelect option is a callback function that runs after every Selctro element has an option selected. The default is false. Expects a function. Passes all Selectro elements in an array as the first method variable, and the selected element as the second variable. |
+| Option | Acceptable Values | Default Value | Description |
+| ------ | ----------------- | --------------| ----------- |
+| `label` | `String` or `false` | 'Select an Option' | The `label` option is the global default value for a Selectro (no options selected). |
+| `links` | `true` or `false` | `false` | The `links` option turns a Selectro list into a drop-down menu. To make this work you must use a URL as the value attribute in the original select options. The default is false. Expects boolean true, or false. |
+| `no_match` | `String` or `false` | 'No options were found matching your search' | The `no_match` option is used to set a global message for the users search query when none of the options match. If the select does not have the searchable attribute, or is not a multiple select, this option is ignored. |
+| `afterSelect` | The afterSelect option is a callback function that runs after every Selctro element has an option selected. The default is false. Expects a function. Passes all Selectro elements in an array as the first method variable, and the selected element as the second variable. |
