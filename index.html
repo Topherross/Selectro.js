@@ -12,11 +12,12 @@
     </head>
     <body>
     <form action="" method="post" id="car_form">
+        <h1>Choose Your Dream Car!</h1>
         <label for="year_selector">Year</label>
         <select name="year" id="year_selector" class="selectro" data-label="Select a Year" tabindex="1">
             <option>Select a Year</option>
             <option value="2007">2007</option>
-            <option value="2008">2008</option>
+            <option value="2008" disabled="disabled">2008</option>
             <option value="2009">2009</option>
             <option value="2010">2010</option>
             <option value="2011">2011</option>
@@ -46,14 +47,23 @@
             </optgroup>
         </select>
         <label for="package_selector">Package</label>
-        <select name="package" id="package_selector" class="selectro-grid">
+        <select name="package" id="package_selector" class="selectro" data-label="Select a Package">
             <option>Select a Package</option>
-            <option value="se">SE</option>
+            <option value="se" disabled="disabled">SE</option>
             <option value="ls">LS</option>
             <option value="xi" disabled="disabled">XI</option>
             <option value="gt">GT</option>
             <option value="gtx" disabled="disabled">GTX</option>
             <option value="gti">GTI</option>
+        </select>
+        <label for="options_selector">Options</label>
+        <select name="options[]" id="options_selector" multiple="multiple" data-label="Select Options">
+            <option value="sports">Sports Package</option>
+            <option value="tech">Tech Package</option>
+            <option value="audio">Audio Package</option>
+            <option value="body">Body Package</option>
+            <option value="leather">Leather Seats</option>
+            <option value="moonroof">Moon Roof</option>
         </select>
         <div class="submit-wrap">
             <input type="submit" name="submit" value="Submit" id="submit_button" />
@@ -83,8 +93,8 @@
                 },
                 submit = function(form){
                     for(var i = 0; i < form.length; i++){
-                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && typeof console !== "undefined")
-                            console.log(form[i].name+": "+form[i].value);
+                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && form[i].name !== "" && typeof console !== "undefined")
+                            console.log(form[i].name+": "+form[i].value, form[i]);
                     }
                 },
                 init = function(){
@@ -92,31 +102,20 @@
                         submit_button = document.querySelector('#submit_button');
 
                     /*----- BEGIN SELECTRO INIT -----*/
-                    selectro.init({
-                        links:false,
-                        searchable:true,
-                        searchIcon:true,
-                        beforeInit:function(){
-                            var header = document.createElement('h1');
-
-                            header.innerHTML = 'Choose Your Dream Car!';
-                            form.insertBefore(header, form.children[0]);
-                        },
-                        afterInit:function(objs){
-//                            if(typeof console !== "undefined")
-//                                console.log(objs);
-
-                            form.addEventListener('submit', function(){
-                                event.preventDefault();
-                                submit(form);
-                            });
-                        },
-                        afterSelect:function(obj, target){
+                    selectro({
+                        label : "Select",
+                        no_match : "No matches found!",
+                        afterSelect : function(){
                             if(typeof console !== "undefined")
-                                console.log(obj, target);
+                                console.log("Option Selected");
                         }
                     });
                     /*----- END SELECTRO INIT -----*/
+
+                    form.addEventListener('submit', function(){
+                        event.preventDefault();
+                        submit(form);
+                    });
                 };
 
             ready();
