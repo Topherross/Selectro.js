@@ -201,6 +201,20 @@
             select.style.display = "none";
         }
 
+        Selectro.prototype.add_optgroup = function(index){
+            if(typeof index === "undefined")
+                return false;
+
+            if(this.original_select.children[index].hasAttribute("label")){
+                this.new_options.appendChild(_createEl("h6", {'class':'selectro-optgroup-header'}, this.original_select.children[index].getAttribute("label")));
+                for(var child in this.original_select.children[index].children){
+                    if(this.original_select.children[index].children.hasOwnProperty(child) && child !== "length"){
+                        this.add_option(this.original_select.children[index].children[child]);
+                    }
+                }
+            }
+        };
+
         Selectro.prototype.add_option = function(option){
             if(!option.hasAttribute('value')){
                 if(option === this.original_select.children[0]){
@@ -242,14 +256,7 @@
             for(var obj in this.original_select.children){
                 if(this.original_select.children.hasOwnProperty(obj) && obj !== "length"){
                     if(this.original_select.children[obj].tagName.toLowerCase() === "optgroup"){
-                        if(this.original_select.children[obj].hasAttribute("label")){
-                            this.new_options.appendChild(_createEl("h6", {'class':'selectro-optgroup-header'}, this.original_select.children[obj].getAttribute("label")));
-                            for(var child in this.original_select.children[obj].children){
-                                if(this.original_select.children[obj].children.hasOwnProperty(child) && child !== "length"){
-                                    this.add_option(this.original_select.children[obj].children[child]);
-                                }
-                            }
-                        }
+                        this.add_optgroup(obj);
                     }else{
                         this.add_option(this.original_select.children[obj]);
                     }
@@ -312,7 +319,7 @@
                 this.highlighted = -1;
 
                 if(!!this.multiple)
-                this.multi_input.value = "";
+                    this.multi_input.value = "";
 
                 if(!!this.searchable)
                     this.search_input.value = "";
@@ -343,6 +350,8 @@
                 if(!!this.multiple &&
                     this.multi_input != document.activeElement)
                     this.multi_input.focus();
+
+                this.new_options.scrollTop = 0;
             }
 
             return false;
@@ -486,13 +495,17 @@
             return false;
         };
 
-        Selectro.prototype.reset_scroll = function(key, i){
-            var height_offset = (this.searchable)? this.search_wrap.clientHeight : 0;
+        Selectro.prototype.reset_scroll = function(){
+            if(this.highlighted === -1)
+                return false;
 
-            if((this.options[i].clientHeight * i) < (this.new_options.scrollTop) && key == 38)
-                this.new_options.scrollTop = (this.options[i].clientHeight * i);
-            else if(((this.options[i].clientHeight * i) + this.options[i].clientHeight) > this.new_options.clientHeight && key == 40)
-                this.new_options.scrollTop = ((this.options[i].clientHeight * i) + this.options[i].clientHeight + height_offset) - this.new_options.clientHeight;
+            var option_top = this.options[this.matches[this.highlighted]].getBoundingClientRect().top - this.new_options.getBoundingClientRect().top,
+                option_bottom = option_top + this.options[this.matches[this.highlighted]].offsetHeight;
+
+            if(option_top < 0)
+                this.new_options.scrollTop -= Math.abs(option_top);
+            else if(option_bottom > this.new_options.clientHeight)
+                this.new_options.scrollTop += (option_bottom - this.new_options.clientHeight);
 
             return false;
         };
@@ -518,17 +531,7 @@
             this.highlighted = match_index;
             _batchRemoveClass(this.options, 'highlighted');
             _addClass(this.options[this.matches[match_index]], 'highlighted');
-            this.reset_scroll(key, this.matches[match_index]);
-
-            return false;
-        };
-
-        Selectro.prototype.reset_search = function(){
-            for(var option in this.options){
-                if(this.options.hasOwnProperty(option))
-                    this.options[option].style.display = "block";
-            }
-            this.highlighted = -1;
+            this.reset_scroll();
 
             return false;
         };

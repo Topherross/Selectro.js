@@ -9,6 +9,88 @@
 		<link media="only screen" href="css/selectro.css" type="text/css" rel="stylesheet"/>
         <script src="js/selectro.js"></script>
         <title>Selectro</title>
+        <style type="text/css">
+            /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
+            *{
+                margin:0;
+                padding:0;
+            }
+
+            html, body{
+                position:relative;
+                width:100%;height:100%;
+                border:none 0;
+                overflow:auto;
+            }
+
+            html{
+                font-family:"Open Sans Condensed", sans-serif;
+                font-size:12px;
+                color:rgb(255,255,255);
+            }
+
+            body{
+                background:rgb(0,0,0);
+            }
+
+            h1{
+                font-family:"Open Sans Condensed", sans-serif;
+                font-size:2.2em;
+                letter-spacing:2px;
+                font-weight:300;
+                padding:0 0 20px 0;
+                margin:0 0 30px 0;
+                text-align:center;
+                border-bottom:rgba(255,255,255,0.2) 1px solid;
+            }
+
+            form{
+                display:block;
+                position:relative;
+                overflow:auto;
+                padding:20px;
+                margin:60px auto;
+                width:500px;
+                background:rgba(120,120,120,0.3);
+                border-radius:5px;
+            }
+
+            label{
+                font-size:1.6em;
+                margin-top:10px;
+                float:left;
+                clear:left;
+                width:80px;
+            }
+
+            div.submit-wrap{
+                float:left;
+                clear:both;
+                width:100%;
+                overflow:auto;
+                margin:80px 0 0;
+            }
+
+            input[type="submit"]{
+                float:right;
+                width:130px;
+                border-radius:3px;
+                background:rgb(47,91,255);
+                color:rgb(255,255,255);
+                text-shadow:0 -1px 0 #000;
+                padding:14px 0 15px;
+                text-align:center;
+                font-family:"Open Sans Condensed", sans-serif;
+                font-size:1.4em;
+                letter-spacing:1px;
+                border:none 0;
+                -webkit-appearance:none;
+                -moz-appearance:none;
+                appearance:none;
+                outline:none;
+                cursor:pointer;
+            }
+        </style>
     </head>
     <body>
     <form action="" method="post" id="car_form">
@@ -94,7 +176,7 @@
                 submit = function(form){
                     for(var i = 0; i < form.length; i++){
                         if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && form[i].name !== "" && typeof console !== "undefined")
-                            console.log(form[i].name+": "+form[i].value, form[i]);
+                            console.log(form[i].name+": "+form[i].value);
                     }
                 },
                 init = function(){
