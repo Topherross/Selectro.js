@@ -6,8 +6,8 @@
         <meta name="apple-mobile-web-app-capable" content="no"/>
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
         <link media="only screen" href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|Open+Sans+Condensed:300,700' type='text/css' rel='stylesheet' />
-		<link media="only screen" href="css/selectro.css" type="text/css" rel="stylesheet"/>
-        <script src="js/selectro.js"></script>
+		<link media="only screen" href="../src/selectro.css" type="text/css" rel="stylesheet"/>
+        <script src="../src/selectro.js"></script>
         <title>Selectro</title>
         <style type="text/css">
             /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
@@ -90,6 +90,37 @@
                 outline:none;
                 cursor:pointer;
             }
+
+            /* --------------- DEMO SPECIFIC SELECTRO STYLES ---------------- */
+
+            div.selectro-wrap *{
+                font-family:"Open Sans Condensed", sans-serif;
+                font-weight:300;
+            }
+
+            div.selectro-wrap{
+                float:left;
+                margin:4px 0 10px;
+            }
+
+            div.selectro-options{
+                max-height:140px;
+                overflow:auto;
+            }
+
+            div.selectro-grid-wrap{
+                float:left;
+                margin:4px 0 10px;
+            }
+
+            div.selectro-grid-option{
+                margin:0 10px 0 0;
+                text-align:center;
+            }
+
+            div.selectro-grid-option-label{
+                padding:6px 0 0 2px;
+            }
         </style>
     </head>
     <body>
@@ -109,7 +140,7 @@
             <option value="2015">2015</option>
         </select>
         <label for="car_selector">Vehicle</label>
-        <select name="car" id="car_selector" class="selectro searchable" tabindex="2">
+        <select name="car" id="car_selector" class="selectro searchable" tabindex="2" data-selectro-after-select="funky">
             <option>Select a Vehicle</option>
             <optgroup label="European Cars">
                 <option value="volvo">Volvo</option>
@@ -129,7 +160,7 @@
             </optgroup>
         </select>
         <label for="package_selector">Package</label>
-        <select name="package" id="package_selector" class="selectro" data-label="Select a Package">
+        <select name="package" id="package_selector" class="selectro" data-label="Select a Package" data-selectro-option-icons="true">
             <option>Select a Package</option>
             <option value="se" disabled="disabled">SE</option>
             <option value="ls">LS</option>
@@ -153,6 +184,9 @@
     </form>
     </body>
     <script type="text/javascript">
+        function funky(){
+            console.log('Oh so funky... So funky yeah!');
+        }
         (function(){
             var ready = function(){
                     if(document.readyState === "complete"){

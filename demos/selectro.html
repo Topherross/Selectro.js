@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="user-scalable=no, width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link media="only screen" href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|Open+Sans+Condensed:300,700' type='text/css' rel='stylesheet' />
+    <link media="only screen" href="../src/selectro.css" type="text/css" rel="stylesheet"/>
+    <script src="../src/selectro.js"></script>
+    <title>Selectro Simple</title>
+    <style type="text/css">
+            /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
+            *{
+                margin:0;
+                padding:0;
+            }
+
+            html, body{
+                position:relative;
+                width:100%;height:100%;
+                border:none 0;
+                overflow:auto;
+            }
+
+            html{
+                font-family:"Open Sans Condensed", sans-serif;
+                font-size:12px;
+                color:rgb(255,255,255);
+                min-width:320px;
+            }
+
+            body{
+                background:rgb(0,0,0);
+            }
+
+            h1{
+                font-family:"Open Sans Condensed", sans-serif;
+                font-size:2.2em;
+                letter-spacing:2px;
+                font-weight:300;
+                padding:0 0 20px 0;
+                margin:0 0 30px 0;
+                text-align:center;
+                border-bottom:rgba(255,255,255,0.2) 1px solid;
+            }
+
+            form{
+                display:block;
+                position:relative;
+                overflow:visible;
+                padding:20px;
+            }
+
+            label{
+                display:block;
+                float:none;
+                font-size:1.26em;
+                margin:0 0 10px 0;
+                letter-spacing:1px;
+            }
+        </style>
+</head>
+<body>
+    <form action="" method="post" id="movie_form">
+        <h1>Simple Selectro</h1>
+        <label for="movie_selector">Choose Your Favorite Movie of 2014</label>
+        <select name="movie" id="movie_selector" class="selectro">
+            <option>Select a Movie</option>
+            <option value="birdman">Birdman</option>
+            <option value="whiplash">Whiplash</option>
+            <option value="boyhood">Boyhood</option>
+            <option value="neighbors">Neighbors</option>
+            <option value="american-sniper">American Sniper</option>
+            <option value="hobbit3">The Hobbit 3</option>
+            <option value="john-wick">John Wick</option>
+        </select>
+    </form>
+</body>
+<script type="text/javascript">
+        (function(){
+            var ready = function(){
+                    if(document.readyState === "complete"){
+                        init();
+                    }else{
+                        if(document.addEventListener){
+                            try{
+                                document.addEventListener("DOMContentLoaded", function(){init();}, false);
+                            }catch(e){
+                                window.addEventListener("load", function(){init();}, false);
+                            }
+                        }else if(document.attachEvent){
+                            try{
+                                document.attachEvent("onreadystatechange", function(){init();});
+                            }catch(e){
+                                window.attachEvent("onload", function(){init()});
+                            }
+                        }
+                    }
+                },
+                init = function(){
+
+                    /*----- BEGIN SELECTRO INIT -----*/
+                    selectro({
+                        label : "Select an Option",
+                        afterSelect : function(){
+                            if(typeof console !== "undefined")
+                                console.log("Option Selected");
+                        }
+                    });
+                    /*----- END SELECTRO INIT -----*/
+                };
+
+            ready();
+        })();
+    </script>
+</html>

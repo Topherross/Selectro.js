@@ -63,9 +63,11 @@
             }
         },
 
-        _setText = function(el, text, html){
+        _setText = function(el, text, html, node){
             if(typeof html !== "undefined" && html === true)
                 el.innerHTML = text;
+            else if(typeof node !== "undefined" && node === true)
+                el.createTextNode(text);
             else if(document.all)
                 el.innerText = text;
             else
@@ -181,6 +183,8 @@
             this.matches = [];
             this.highlighted = -1;
             this.options_visible = false;
+            this.option_icons = !!(select.hasAttribute('data-selectro-option-icons') &&
+                                    select.getAttribute('data-selectro-option-icons') == 'true');
             this.searchable = (!this.multiple)? _hasClass(select, 'searchable') : false;
 
             if(this.searchable) {
@@ -224,6 +228,10 @@
             }
 
             var new_option = _createEl('div', {'class':'selectro-option', 'data-value': option.value}, _getText(option));
+            if(!!this.option_icons){
+                var image = _createEl('div', {'class':'selectro-option-icon', 'id': 'option_icon_' + option.value});
+                new_option.appendChild(image);
+            }
             this.new_options.appendChild(new_option);
 
             if(_configs.links)
@@ -462,7 +470,9 @@
             this.original_select.children[i].selected = true;
             this.hide_options();
 
-            if(typeof _configs.afterSelect === "function")
+            if(this.original_select.hasAttribute('data-selectro-after-select'))
+                this.trigger(this.original_select.getAttribute('data-selectro-after-select'));
+            else if(typeof _configs.afterSelect === "function")
                 _configs.afterSelect();
 
             return false;
@@ -484,7 +494,9 @@
 
             this.hide_options();
 
-            if(typeof _configs.afterSelect === "function")
+            if(this.original_select.hasAttribute('data-selectro-after-select'))
+                this.trigger(this.original_select.getAttribute('data-selectro-after-select'));
+            else if(typeof _configs.afterSelect === "function")
                 _configs.afterSelect();
 
             return false;
@@ -563,6 +575,17 @@
                 this.new_options.appendChild(this.no_match);
             else if(matches && this.no_match.parentNode !== null)
                 this.new_options.removeChild(this.no_match);
+
+            return false;
+        };
+
+        Selectro.prototype.trigger = function(func){
+            var fn = window[func];
+
+            if(typeof fn !== "function")
+                return false;
+
+            fn();
 
             return false;
         };

@@ -3,37 +3,6 @@
 
 /* --------------- BOF ---------------- */
 
-/* --------------- DEMO SPECIFIC SELECTRO STYLES ---------------- */
-
-div.selectro-wrap *{
-    font-family:"Open Sans Condensed", sans-serif;
-    font-weight:300;
-}
-
-div.selectro-wrap{
-    float:left;
-    margin:4px 0 10px;
-}
-
-div.selectro-options{
-    max-height:140px;
-    overflow:auto;
-}
-
-div.selectro-grid-wrap{
-    float:left;
-    margin:4px 0 10px;
-}
-
-div.selectro-grid-option{
-    margin:0 10px 0 0;
-    text-align:center;
-}
-
-div.selectro-grid-option-label{
-    padding:6px 0 0 2px;
-}
-
 /* --------------- SELECTRO BASE STYLES ---------------- */
 
 div.selectro-overlay{
@@ -112,7 +81,7 @@ div.selectro-option-multiple-remove{
     margin:3px 0 0 6px;
     width:18px;height:18px;
     border-radius:12px;
-    background:transparent url(../img/SelectroSprite-48x48.png) no-repeat -18px top;
+    background:transparent url(img/SelectroSprite-48x48.png) no-repeat -18px top;
     background-size:36px 36px;
 }
 
@@ -207,7 +176,7 @@ input.selectro-search{
 div.selectro-search-icon{
     float:right;
     width:24px;height:24px;
-    background:transparent url(../img/SelectroSprite-48x48.png) no-repeat left -24px;
+    background:transparent url(img/SelectroSprite-48x48.png) no-repeat left -24px;
 }
 
 div.selectro-no-matches{
