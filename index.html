@@ -175,8 +175,15 @@
                 },
                 submit = function(form){
                     for(var i = 0; i < form.length; i++){
-                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && form[i].name !== "" && typeof console !== "undefined")
-                            console.log(form[i].name+": "+form[i].value);
+                        if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && form[i].name !== "" && typeof console !== "undefined"){
+                            console.log(i, form[i], form[i].name+": "+form[i].value);
+                            if(form[i].hasAttribute('multiple')){
+                                for(var opt in form[i].children){
+                                    if({}.hasOwnProperty.call(form[i].children, opt) && form[i].children[opt].selected == true && opt != 'length')
+                                        console.log(form[i].children[opt], form[i].children[opt].value, opt);
+                                }
+                            }
+                        }
                     }
                 },
                 init = function(){

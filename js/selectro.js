@@ -80,7 +80,7 @@
 
         _setAttributes = function(el, attrs){
             for(var attr in attrs){
-                if(attrs.hasOwnProperty(attr))
+                if({}.hasOwnProperty.call(attrs, attr))
                     el.setAttribute(attr, attrs[attr]);
             }
 
@@ -106,7 +106,7 @@
 
             if(typeof class_list !== "undefined") {
                 for (var class_name in class_list) {
-                    if (class_list.hasOwnProperty(class_name) && class_list[class_name] == klass) {
+                    if ({}.hasOwnProperty.call(class_list, class_name) && class_list[class_name] == klass) {
                         return true;
                     }
                 }
@@ -118,7 +118,7 @@
             var class_list = obj.getAttribute('class').split(' ');
 
             for(var class_name in class_list){
-                if(class_list.hasOwnProperty(class_name) && class_list[class_name] == klass){
+                if({}.hasOwnProperty.call(class_list, class_name) && class_list[class_name] == klass){
                     class_list.splice(class_name, 1);
                     obj.setAttribute('class', class_list.join(' '));
                     break;
@@ -139,7 +139,7 @@
         },
         _batchRemoveClass = function(objs, klass){
             for(var obj in objs){
-                if(objs.hasOwnProperty(obj) && obj != 'length' && obj != 'item' && objs[obj].hasAttribute('class'))
+                if({}.hasOwnProperty.call(objs, obj) && obj != 'length' && obj != 'item' && objs[obj].hasAttribute('class'))
                     _removeClass(objs[obj], klass);
             }
             return false;
@@ -148,7 +148,7 @@
     Selectro = (function(window, document){
 
         function Selectro(select){
-            if(typeof this === "undefined" || typeof select === "undefined" || select.hasAttribute('data-initialized'))
+            if(typeof this === "undefined" || typeof select === "undefined" || select.hasAttribute('data-selectro-initialized'))
                 return;
 
             this.original_select = select;
@@ -197,7 +197,7 @@
             this.bind_events();
 
             this.original_select.parentNode.insertBefore(this.select_wrap, this.original_select.nextElementSibling);
-            select.setAttribute('data-initialized', 'true');
+            select.setAttribute('data-selectro-initialized', 'true');
             select.style.display = "none";
         }
 
@@ -437,6 +437,7 @@
             _removeClass(this.options[i], 'disabled');
 
             this.new_select.removeChild(option);
+            this.original_select.children[i].selected = false;
             this.hide_options();
         };
 
@@ -458,6 +459,7 @@
             selected_option.appendChild(option_remove);
             this.new_select.insertBefore(selected_option, this.multi_input_wrap);
 
+            this.original_select.children[i].selected = true;
             this.hide_options();
 
             if(typeof _configs.afterSelect === "function")
@@ -582,7 +584,8 @@
         };
 
         [].forEach.call(selects, function(select){
-            new Selectro(select);
+            if(!select.hasOwnProperty('data-selectro-initialized'))
+                new Selectro(select);
         });
 
         return false;
