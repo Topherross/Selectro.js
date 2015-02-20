@@ -33,9 +33,11 @@ There are four configuration options available when calling `selectro();`
 
 To use global configurations call `selectro` like this:
 
-```selectro({
+```javascript
+selectro({
     label : "Select Options",
     links : true,
     no_match : "No matches found!",
     afterSelect : function(){}
-});```
+});
+```
