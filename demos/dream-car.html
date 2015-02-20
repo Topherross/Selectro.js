@@ -6,44 +6,12 @@
         <meta name="apple-mobile-web-app-capable" content="no"/>
         <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
         <link media="only screen" href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|Open+Sans+Condensed:300,700' type='text/css' rel='stylesheet' />
+        <link media="only screen" href="css/demo.css" type="text/css" rel="stylesheet"/>
 		<link media="only screen" href="../src/selectro.css" type="text/css" rel="stylesheet"/>
         <script src="../src/selectro.js"></script>
-        <title>Selectro</title>
+        <title>Selectro | Dream Car</title>
         <style type="text/css">
             /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
-            *{
-                margin:0;
-                padding:0;
-            }
-
-            html, body{
-                position:relative;
-                width:100%;height:100%;
-                border:none 0;
-                overflow:auto;
-            }
-
-            html{
-                font-family:"Open Sans Condensed", sans-serif;
-                font-size:12px;
-                color:rgb(255,255,255);
-            }
-
-            body{
-                background:rgb(0,0,0);
-            }
-
-            h1{
-                font-family:"Open Sans Condensed", sans-serif;
-                font-size:2.2em;
-                letter-spacing:2px;
-                font-weight:300;
-                padding:0 0 20px 0;
-                margin:0 0 30px 0;
-                text-align:center;
-                border-bottom:rgba(255,255,255,0.2) 1px solid;
-            }
-
             form{
                 display:block;
                 position:relative;
@@ -145,7 +113,7 @@
             <optgroup label="European Cars">
                 <option value="volvo">Volvo</option>
                 <option value="saab" disabled="disabled">Saab</option>
-                <option value="mercedes">Mercedes</option>
+                <option value="mercedes" selected="selected">Mercedes</option>
                 <option value="audi">Audi</option>
                 <option value="volkswagen">Volkswagen</option>
                 <option value="bmw">BMW</option>
@@ -172,11 +140,11 @@
         <label for="options_selector">Options</label>
         <select name="options[]" id="options_selector" class="selectro" multiple="multiple" data-label="Select Options">
             <option value="sports">Sports Package</option>
-            <option value="tech">Tech Package</option>
+            <option value="tech" selected="selected">Tech Package</option>
             <option value="audio">Audio Package</option>
             <option value="body">Body Package</option>
-            <option value="leather">Leather Seats</option>
-            <option value="moonroof">Moon Roof</option>
+            <option value="leather" selected="selected">Leather Seats</option>
+            <option value="moonroof" selected="selected">Moon Roof</option>
         </select>
         <div class="submit-wrap">
             <input type="submit" name="submit" value="Submit" id="submit_button" />

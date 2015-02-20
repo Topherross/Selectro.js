@@ -30,3 +30,12 @@ There are four configuration options available when calling `selectro();`
 | `links` | `true` or `false` | `false` | The `links` option turns a Selectro list into a drop-down menu. To make this work you must use a URL as the value attribute in the original select options. The default is false. Expects boolean true, or false. |
 | `no_match` | `String` or `false` | 'No options were found matching your search' | The `no_match` option is used to set a global message for the users search query when none of the options match. If the select does not have the searchable attribute, or is not a multiple select, this option is ignored. |
 | `afterSelect` | `function` or `false` | `false` | The afterSelect option is a callback function that runs after every Selectro element has an option selected. The default is false. Expects a function. Passes all Selectro elements in an array as the first method variable, and the selected element as the second variable. |
+
+To use global configurations call `selectro` like this:
+
+```selectro({
+    label : "Select Options",
+    links : true,
+    no_match : "No matches found!",
+    afterSelect : function(){}
+});```
