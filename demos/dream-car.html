@@ -8,7 +8,7 @@
         <link media="only screen" href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|Open+Sans+Condensed:300,700' type='text/css' rel='stylesheet' />
         <link media="only screen" href="css/demo.css" type="text/css" rel="stylesheet"/>
 		<link media="only screen" href="../src/selectro.css" type="text/css" rel="stylesheet"/>
-        <script src="../src/selectro.js"></script>
+        <script src="../src/selectro.js" type="text/javascript"></script>
         <title>Selectro | Dream Car</title>
         <style type="text/css">
             /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
@@ -180,9 +180,9 @@
                         if(form[i].value !== "Submit" && !form[i].classList.contains('selectro-search') && form[i].name !== "" && typeof console !== "undefined"){
                             console.log(i, form[i], form[i].name+": "+form[i].value);
                             if(form[i].hasAttribute('multiple')){
-                                for(var opt in form[i].children){
-                                    if({}.hasOwnProperty.call(form[i].children, opt) && form[i].children[opt].selected == true && opt != 'length')
-                                        console.log(form[i].children[opt], form[i].children[opt].value, opt);
+                                for(var q = 0; q < form[i].children.length; q++){
+                                    if(form[i].children[q].selected == true)
+                                        console.log(form[i].children[q], form[i].children[q].value, q);
                                 }
                             }
                         }
@@ -203,10 +203,12 @@
                     });
                     /*----- END SELECTRO INIT -----*/
 
-                    form.addEventListener('submit', function(){
-                        event.preventDefault();
-                        submit(form);
-                    });
+                    if(document.addEventListener) {
+                        form.addEventListener('submit', function () {
+                            event.preventDefault();
+                            submit(form);
+                        });
+                    }
                 };
 
             ready();

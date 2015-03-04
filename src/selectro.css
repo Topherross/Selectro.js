@@ -53,7 +53,7 @@ div.selectro:focus, div.selectro.multiple{
 
 div.selectro.multiple{
     width:100%;
-    max-width:420px;
+    max-width:400px;
     padding:3px 0 0 3px;
     overflow:auto;
     cursor:text;
@@ -61,6 +61,7 @@ div.selectro.multiple{
 
 div.selectro-multiple-input-wrap{
     margin:0 14px 0 11px;
+    float:left;
 }
 
 div.selectro-option-multiple{
@@ -90,6 +91,7 @@ div.selectro-option-multiple-remove:hover{
 }
 
 input.selectro-multiple-input{
+    float:none;
     display:block;
     min-width:25px;
     max-width:100%;

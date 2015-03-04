@@ -1,43 +1,15 @@
 (function () {
     'use strict';
 
-    // Fallback for IE 7/8
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function(searchElement, fromIndex) {
-            var k;
-
-            if (this == null)
-                throw new TypeError('"this" is null or not defined');
-
-            var O = Object(this),
-                len = O.length >>> 0;
-
-            if (len === 0)
-                return -1;
-
-            var n = +fromIndex || 0;
-
-            if (Math.abs(n) === Infinity)
-                n = 0;
-
-            if (n >= len)
-                return -1;
-
-            k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-            while (k < len) {
-                if (k in O && O[k] === searchElement)
-                    return k;
-                k++;
-            }
-            return -1;
-        };
-    }
-
     var Selectro,
         selectro,
         current_selectro,
         _configs,
+        _browser = window.navigator.userAgent,
+        _mobile_regex = /i(Phone|Pod|Pad)|Android|Blackberry|Opera Mini|Opera Mobi/i,
+        _msie_regex = /msie|trident/i,
+        _ie9 = false,
+
         _event = function(target, event, func, bubbles){
             var _bubbles = (typeof bubbles !== "undefined" && !!bubbles)? bubbles : false;
 
@@ -148,7 +120,7 @@
             this.multiple = (select.hasAttribute('multiple') && select.getAttribute('multiple') === "multiple");
             this.select_wrap = _createEl('div', {'class':'selectro-wrap'});
             this.new_select = _createEl('div', {
-                'class':select.classList,
+                'class': (select.hasAttribute('class'))? select.getAttribute('class') : '',
                 'id':(select.hasAttribute('id'))? 'selectro_'+select.getAttribute('id') : '',
                 'tabindex':(select.hasAttribute('tabindex'))? select.getAttribute('tabindex') : '0'
             });
@@ -161,7 +133,9 @@
                     'class': 'selectro-multiple-input',
                     'placeholder' : this.label
                 });
-                this.options_selected = [];
+                if(!!_ie9){
+                    this.multi_input.value = this.label;
+                }
             }else{
                 this.select_label = _createEl('span', {'class':'selectro-label default'});
                 this.arrow = _createEl('span', {'class':'selectro-arrow'});
@@ -239,11 +213,11 @@
             }
 
             if(_configs.links)
-                _event(new_option, "click", this.option_link.bind(this), false);
+                _event(new_option, "click", (function(event){ this.option_link(event) }).bind(this), false);
             else if(!!this.multiple)
-                _event(new_option, "click", this.select_option_multiple.bind(this), false);
+                _event(new_option, "click", (function(event){ this.select_option_multiple(event) }).bind(this), false);
             else
-                _event(new_option, "click", this.select_option.bind(this), false);
+                _event(new_option, "click", (function(event){ this.select_option(event) }).bind(this), false);
 
             if(option.hasAttribute('selected') && !option.hasAttribute('disabled')){
                 _addClass(new_option, 'selected');
@@ -287,7 +261,7 @@
             this.select_wrap.appendChild(this.options_wrap);
         };
 
-        Selectro.prototype.toggle_options = function(stop){
+        Selectro.prototype.toggle_options = function(event, stop){
             if(typeof stop === "boolean" && !!stop)
                 _stop(event);
 
@@ -315,8 +289,10 @@
                 _batchRemoveClass(this.options, 'highlighted');
                 this.highlighted = -1;
 
-                if(!!this.multiple)
+                if(!!this.multiple && !_ie9)
                     this.multi_input.value = "";
+                else if(!!this.multiple && !!_ie9)
+                    this.multi_input.blur();
 
                 if(!!this.searchable)
                     this.search_input.value = "";
@@ -355,7 +331,7 @@
         };
 
         Selectro.prototype.bind_events = function(){
-            _event(this.new_select, 'click', this.toggle_options.bind(this, true), false);
+            _event(this.new_select, 'click', (function(event){ this.toggle_options(event, true); }).bind(this), false);
             _event(document, 'click', this.hide_options.bind(this), false);
 
             if(!!this.searchable){
@@ -378,8 +354,12 @@
 
                 _event(this.search_input, 'keydown', (function(event){
                     var key = event.keyCode || event.which;
+
+                    if(key == 13)
+                        event.preventDefault();
+
                     if (key == 13 && this.highlighted !== -1)
-                        this.select_option();
+                        this.select_option(event);
                     else if ( key == 9 && this.options_visible )
                         this.hide_options();
                 }).bind(this), false);
@@ -392,6 +372,18 @@
                         this.search_options();
                     }).bind(this), 20);
                 }).bind(this), false);
+
+                if(!!_ie9){
+                    _event(this.multi_input, 'focus', (function(){
+                        if(this.multi_input.value == this.label)
+                            this.multi_input.value = '';
+                    }).bind(this), false);
+
+                    _event(this.multi_input, 'blur', (function(){
+                        if(this.multi_input.value == '')
+                            this.multi_input.value = this.label;
+                    }).bind(this), false);
+                }
             }
 
             _event(this.new_select, 'keyup', (function(event){
@@ -412,13 +404,13 @@
             _event(this.new_select, 'keydown', (function(event){
                 var key = event.keyCode || event.which;
 
-                if(key == 13 && !!this.multiple)
+                if(key == 13)
                     event.preventDefault();
 
                 if (key == 13 && this.highlighted !== -1 && !this.multiple)
-                    this.select_option();
+                    this.select_option(event);
                 else if (key == 13 && this.highlighted !== -1 && !!this.multiple)
-                    this.select_option_multiple();
+                    this.select_option_multiple(event);
                 else if ( key == 9 && this.options_visible )
                     this.hide_options();
             }).bind(this), false);
@@ -428,7 +420,7 @@
             for(var index = 0; index < this.options.length; index++){
                 if(_hasClass(this.options[index], 'selected') &&
                     !_hasClass(this.options[index], 'disabled')){
-                    this.select_option(index);
+                    this.select_option(null, index);
                     break;
                 }
             }
@@ -440,14 +432,14 @@
             for(var index = 0; index < this.options.length; index++){
                 if(_hasClass(this.options[index], 'selected') &&
                     !_hasClass(this.options[index], 'disabled')){
-                    this.select_option_multiple(this.matches.indexOf(index))
+                    this.select_option_multiple(null, this.matches.indexOf(index));
                 }
             }
 
             return false;
         };
 
-        Selectro.prototype.select_option_multiple_remove = function(){
+        Selectro.prototype.select_option_multiple_remove = function(event){
             event.stopPropagation();
 
             var option = event.target.parentNode,
@@ -461,8 +453,8 @@
             this.hide_options();
         };
 
-        Selectro.prototype.select_option_multiple = function(index){
-            var i = (typeof index !== "undefined")? index : (this.highlighted === -1)? this.options.indexOf(event.target) : this.matches[this.highlighted];
+        Selectro.prototype.select_option_multiple = function(event, index){
+            var i = (!isNaN(parseFloat(index)))? index : (this.highlighted === -1)? this.options.indexOf(event.target) : this.matches[this.highlighted];
 
             if(this.options[i].hasAttribute("data-disabled") &&
                 this.options[i].getAttribute("data-disabled") === "disabled")
@@ -490,8 +482,8 @@
             return false;
         };
 
-        Selectro.prototype.select_option = function(index){
-            var i = (typeof index !== "undefined")? index : (this.highlighted === -1)? this.options.indexOf(event.target) : this.matches[this.highlighted];
+        Selectro.prototype.select_option = function(event, index){
+            var i = (!isNaN(parseFloat(index)))? index : (this.highlighted === -1)? this.options.indexOf(event.target) : this.matches[this.highlighted];
 
             if(this.options[i].hasAttribute("data-disabled") &&
                 this.options[i].getAttribute("data-disabled") === "disabled")
@@ -514,7 +506,7 @@
             return false;
         };
 
-        Selectro.prototype.option_link = function(){
+        Selectro.prototype.option_link = function(event){
             if(event.target.hasAttribute("data-value"))
                 window.location.assign(event.target.getAttribute("data-value"));
 
@@ -566,6 +558,9 @@
             var matches = false,
                 search_field = (!!this.multiple)? this.multi_input : this.search_input;
 
+            if(!!_ie9 && (search_field.value == '' || search_field.value == this.label))
+                return false;
+
             this.matches = [];
 
             for(var option in this.options){
@@ -606,9 +601,22 @@
     })(window, document);
 
     selectro = function(configs){
+        if(_mobile_regex.test(_browser))
+            return false;
+
+        if(_msie_regex.test(_browser)){
+            var match = _browser.match(/(?:msie |rv:)(\d+(\.\d+)?)/i),
+                version = (match && match.length > 1 && match[1]) || '';
+
+            if(Math.abs(parseFloat(version)) <= 8)
+                return false;
+            else if(Math.abs(parseFloat(version)) == 9)
+                _ie9 = true;
+        }
+
         var selects = document.querySelectorAll(".selectro");
 
-        if(selects.length === 0)
+        if(selects.length === 0 && selects === null)
             return false;
 
         _configs = {
