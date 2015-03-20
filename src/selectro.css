@@ -82,7 +82,7 @@ div.selectro-option-multiple-remove{
     margin:3px 0 0 6px;
     width:18px;height:18px;
     border-radius:12px;
-    background:transparent url(img/SelectroSprite-48x48.png) no-repeat -18px top;
+    background:transparent url("img/SelectroSprite-48x48.png") no-repeat -18px top;
     background-size:36px 36px;
 }
 
@@ -178,7 +178,7 @@ input.selectro-search{
 div.selectro-search-icon{
     float:right;
     width:24px;height:24px;
-    background:transparent url(img/SelectroSprite-48x48.png) no-repeat left -24px;
+    background:transparent url("img/SelectroSprite-48x48.png") no-repeat left -24px;
 }
 
 div.selectro-no-matches{

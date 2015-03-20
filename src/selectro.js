@@ -3,7 +3,7 @@
 
     var Selectro,
         selectro,
-        current_selectro,
+        $super,
         _configs,
         _browser = window.navigator.userAgent,
         _mobile_regex = /i(Phone|Pod|Pad)|Android|Blackberry|Opera Mini|Opera Mobi/i,
@@ -112,7 +112,7 @@
     Selectro = (function(window, document){
 
         function Selectro(select){
-            if(typeof this === "undefined" || typeof select === "undefined" || select.hasAttribute('data-selectro-initialized'))
+            if(typeof select === "undefined" || select.hasAttribute('data-selectro-initialized'))
                 return;
 
             this.original_select = select;
@@ -133,9 +133,8 @@
                     'class': 'selectro-multiple-input',
                     'placeholder' : this.label
                 });
-                if(!!_ie9){
+                if(!!_ie9)
                     this.multi_input.value = this.label;
-                }
             }else{
                 this.select_label = _createEl('span', {'class':'selectro-label default'});
                 this.arrow = _createEl('span', {'class':'selectro-arrow'});
@@ -157,10 +156,11 @@
                 this.search_icon = _createEl('div', {'class':'selectro-search-icon'});
             }
 
-            if(!!this.searchable || !!this.multiple){
+            if(!!this.searchable || !!this.multiple)
                 this.no_match = _createEl('div', {'class':'selectro-no-matches'}, ((!!_configs.no_match)? _configs.no_match : "No options were found matching your search"));
-            }
+        }
 
+        Selectro.prototype.build = function(){
             this.build_html();
             this.bind_events();
 
@@ -172,27 +172,23 @@
             this.original_select.parentNode.insertBefore(this.select_wrap, this.original_select.nextElementSibling);
             this.original_select.setAttribute('data-selectro-initialized', 'true');
             this.original_select.style.display = "none";
-        }
+        };
 
         Selectro.prototype.add_optgroup = function(index){
             if(typeof index === "undefined")
                 return false;
 
-            if(this.original_select.children[index].hasAttribute("label")){
+            if(this.original_select.children[index].hasAttribute("label"))
                 this.new_options.appendChild(_createEl("h6", {'class':'selectro-optgroup-header'}, this.original_select.children[index].getAttribute("label")));
-                for(var child in this.original_select.children[index].children){
-                    if(this.original_select.children[index].children.hasOwnProperty(child) && child !== "length"){
-                        this.add_option(this.original_select.children[index].children[child]);
-                    }
-                }
-            }
+
+            for(var i = 0; i < this.original_select.children[index].children.length; i++)
+                this.add_option(this.original_select.children[index].children[i]);
         };
 
         Selectro.prototype.add_option = function(option){
             if(!option.hasAttribute('value')){
-                if(option === this.original_select.children[0]){
+                if(option === this.original_select.children[0])
                     this.original_select.value = "";
-                }
                 return;
             }
 
@@ -225,19 +221,14 @@
                 _setAttributes(new_option, {'data-disabled':'disabled'});
                 _addClass(new_option, 'disabled');
             }
-
-
         };
 
         Selectro.prototype.build_html = function(){
-            for(var obj in this.original_select.children){
-                if(this.original_select.children.hasOwnProperty(obj) && obj !== "length"){
-                    if(this.original_select.children[obj].tagName.toLowerCase() === "optgroup"){
-                        this.add_optgroup(obj);
-                    }else{
-                        this.add_option(this.original_select.children[obj]);
-                    }
-                }
+            for(var i = 0; i < this.original_select.children.length; i++){
+                if(this.original_select.children[i].tagName.toLowerCase() === "optgroup")
+                    this.add_optgroup(i);
+                else
+                    this.add_option(this.original_select.children[i]);
             }
 
             if(this.searchable){
@@ -265,12 +256,12 @@
             if(typeof stop === "boolean" && !!stop)
                 _stop(event);
 
-            if(typeof current_selectro !== "undefined" &&
-                current_selectro.options_visible &&
-                current_selectro != this)
-                current_selectro.hide_options();
+            if(typeof $super !== "undefined" &&
+                $super.options_visible &&
+                $super != this)
+                $super.hide_options();
 
-            current_selectro = this;
+            $super = this;
 
             if(this.options_visible === true)
                 this.hide_options();
@@ -417,10 +408,10 @@
         };
 
         Selectro.prototype.select_default_option = function(){
-            for(var index = 0; index < this.options.length; index++){
-                if(_hasClass(this.options[index], 'selected') &&
-                    !_hasClass(this.options[index], 'disabled')){
-                    this.select_option(null, index);
+            for(var i = 0; i < this.options.length; i++){
+                if(_hasClass(this.options[i], 'selected') &&
+                    !_hasClass(this.options[i], 'disabled')){
+                    this.select_option(null, i);
                     break;
                 }
             }
@@ -429,10 +420,10 @@
         };
 
         Selectro.prototype.select_default_options_multiple = function(){
-            for(var index = 0; index < this.options.length; index++){
-                if(_hasClass(this.options[index], 'selected') &&
-                    !_hasClass(this.options[index], 'disabled')){
-                    this.select_option_multiple(null, this.matches.indexOf(index));
+            for(var i = 0; i < this.options.length; i++){
+                if(_hasClass(this.options[i], 'selected') &&
+                    !_hasClass(this.options[i], 'disabled')){
+                    this.select_option_multiple(null, this.matches.indexOf(i));
                 }
             }
 
@@ -443,13 +434,20 @@
             event.stopPropagation();
 
             var option = event.target.parentNode,
-                i = option.getAttribute('data-option-index');
+                index = option.getAttribute('data-option-index');
 
-            this.options[i].removeAttribute('data-disabled');
-            _removeClass(this.options[i], 'disabled');
+            this.options[index].removeAttribute('data-disabled');
+            _removeClass(this.options[index], 'disabled');
 
             this.new_select.removeChild(option);
-            this.original_select.children[i].selected = false;
+            this.original_select.children[index].selected = false;
+
+            this.matches = [];
+
+            for(var i = 0; i < this.options.length; i++)
+                if(!this.options[i].hasAttribute('data-disabled'))
+                    this.matches.push(parseInt(i));
+
             this.hide_options();
         };
 
@@ -477,7 +475,7 @@
             if(this.original_select.hasAttribute('data-selectro-after-select'))
                 this.trigger(this.original_select.getAttribute('data-selectro-after-select'));
             else if(typeof _configs.afterSelect === "function")
-                _configs.afterSelect();
+                _configs.afterSelect(_getText(this.options[i]));
 
             return false;
         };
@@ -501,7 +499,7 @@
             if(this.original_select.hasAttribute('data-selectro-after-select'))
                 this.trigger(this.original_select.getAttribute('data-selectro-after-select'));
             else if(typeof _configs.afterSelect === "function")
-                _configs.afterSelect();
+                _configs.afterSelect(_getText(this.options[i]));
 
             return false;
         };
@@ -533,18 +531,12 @@
                 return false;
 
             var highlighted = (this.highlighted === -1)? this.matches[0] : this.highlighted,
-                match_index;
-
-            if(typeof key !== "undefined") {
-                if (key == 38) {
-                    match_index = (highlighted === 0) ? 0 : this.highlighted - 1;
-                }
-                if (key == 40) {
-                    match_index = ((highlighted + 1) > (this.matches.length - 1)) ? this.matches.length - 1 : this.highlighted + 1;
-                }
-            }else{
                 match_index = 0;
-            }
+
+            if (typeof key !== "undefined" && key == 38)
+                match_index = (highlighted === 0) ? 0 : this.highlighted - 1;
+            if (typeof key !== "undefined" && key == 40)
+                match_index = ((highlighted + 1) > (this.matches.length - 1)) ? this.matches.length - 1 : this.highlighted + 1;
 
             this.highlighted = match_index;
             _batchRemoveClass(this.options, 'highlighted');
@@ -563,19 +555,18 @@
 
             this.matches = [];
 
-            for(var option in this.options){
-                if(this.options.hasOwnProperty(option)){
-                    var el_text = _getText(this.options[option]).toLowerCase();
+            for(var i = 0; i < this.options.length; i++){
+                var el_text = _getText(this.options[i]).toLowerCase();
                     if(el_text.indexOf(search_field.value.toLowerCase()) === -1){
-                        this.options[option].style.display = "none";
+                        this.options[i].style.display = "none";
                     }else{
                         if(matches === false)
                             matches = true;
-                        this.options[option].style.display = "block";
-                        if(!this.options[option].hasAttribute('data-disabled'))
-                            this.matches.push(parseInt(option));
+
+                        this.options[i].style.display = "block";
+                        if(!this.options[i].hasAttribute('data-disabled'))
+                            this.matches.push(parseInt(i));
                     }
-                }
             }
 
             if(!matches)
@@ -589,10 +580,8 @@
         Selectro.prototype.trigger = function(func){
             var fn = window[func];
 
-            if(typeof fn !== "function")
-                return false;
-
-            fn();
+            if(typeof fn === "function")
+                fn();
 
             return false;
         };
@@ -626,9 +615,12 @@
             afterSelect : configs.afterSelect || false
         };
 
-        for(var index = 0; index < selects.length; index++){
-            if(!selects[index].hasOwnProperty('data-selectro-initialized'))
-                new Selectro(selects[index]);
+        for(var i = 0; i < selects.length; i++){
+            if(!selects[i].hasOwnProperty('data-selectro-initialized')){
+                var _selectro = new Selectro(selects[i]);
+
+                _selectro.build();
+            }
         }
 
         return false;

@@ -12,6 +12,12 @@
     <title>Selectro | Simple</title>
     <style type="text/css">
             /* --------------- COMMON STYLES NOT RELATED TO SELECTRO ---------------- */
+
+            body{
+                max-width:460px;
+                margin:0 auto;
+            }
+
             form{
                 display:block;
                 position:relative;
@@ -23,15 +29,20 @@
                 display:block;
                 float:none;
                 font-size:1.26em;
-                margin:0 0 10px 0;
+                margin:0 0 14px 0;
                 letter-spacing:1px;
+            }
+
+            span.display{
+                display:inline-block;
+                margin:0 0 0 6px;
             }
         </style>
 </head>
 <body>
     <form action="" method="post" id="movie_form">
         <h1>Simple Selectro</h1>
-        <label for="movie_selector">Choose Your Favorite Movie of 2014</label>
+        <label for="movie_selector">Choose Your Favorite Movie of 2014<span id="display"></span></label>
         <select name="movie" id="movie_selector" class="selectro">
             <option>Select a Movie</option>
             <option value="birdman">Birdman</option>
@@ -66,13 +77,13 @@
                     }
                 },
                 init = function(){
+                    var display = document.querySelector('#display');
 
                     /*----- BEGIN SELECTRO INIT -----*/
                     selectro({
                         label : "Select an Option",
-                        afterSelect : function(){
-                            if(typeof console !== "undefined")
-                                console.log("Option Selected");
+                        afterSelect : function(selected_text){
+                            display.textContent = ': ' + selected_text;
                         }
                     });
                     /*----- END SELECTRO INIT -----*/
