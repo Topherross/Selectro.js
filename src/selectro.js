@@ -208,9 +208,7 @@
                     this.matches.push(this.options.indexOf(new_option));
             }
 
-            if(_configs.links)
-                _event(new_option, "click", (function(event){ this.option_link(event); }).bind(this), false);
-            else if(!!this.multiple)
+            if(!!this.multiple)
                 _event(new_option, "click", (function(event){ this.select_option_multiple(event); }).bind(this), false);
             else
                 _event(new_option, "click", (function(event){ this.select_option(event); }).bind(this), false);
@@ -504,13 +502,6 @@
             return false;
         };
 
-        Selectro.prototype.option_link = function(event){
-            if(event.target.hasAttribute("data-value"))
-                window.location.assign(event.target.getAttribute("data-value"));
-
-            return false;
-        };
-
         Selectro.prototype.reset_scroll = function(){
             if(this.highlighted === -1)
                 return false;
@@ -609,7 +600,6 @@
             return false;
 
         _configs = {
-            links : configs.links || false,
             label : configs.label || false,
             no_match : configs.no_match || false,
             afterSelect : configs.afterSelect || false
