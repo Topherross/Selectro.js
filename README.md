@@ -49,5 +49,5 @@ selectro({
 3. To override the global `label` configuration, or the default for an individual Selectro; add `data-label="[Your Custom Label]"` to the original select.   
 4. To override the global `no_match` configuration, or the default for an individual Selectro; add `data-no-match="[Your Custom no-match String]"` to the original select.   
 5. To override the global `afterSelect` configuration add `data-after-select="[Your Custom Function Reference]"` to the original select.
-    * __INCORRECT__ pass a function call; `data-after-select="myFunction()"`. __DO NOT__ add the `()` at the end of your function.
+    * __INCORRECT__ passing a function call; `data-after-select="myFunction()"`
     * __CORRECT__ passing a function reference; `data-after-select="myFunction"`
