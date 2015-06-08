@@ -90,11 +90,11 @@
                 }, getText(option));
 
                 if (!!this.option_icons) {
-                    var image = createEl('div', {
+                    var icon = createEl('div', {
                         'class': 'selectro-option-icon',
                         'id': 'option_icon_' + option.value
                     });
-                    new_option.appendChild(image);
+                    new_option.appendChild(icon);
                 }
 
                 this.new_options.appendChild(new_option);
@@ -107,14 +107,9 @@
                         this.matches.push(this.options.indexOf(new_option));
                 }
 
-                if (!!this.multiple)
-                    new_option.addEventListener("click", (function (event) {
-                        this.selectOption(event);
-                    }).bind(this), false);
-                else
-                    new_option.addEventListener("click", (function (event) {
-                        this.selectOption(event);
-                    }).bind(this), false);
+               new_option.addEventListener("click", (function (event) {
+                    this.selectOption(event);
+                }).bind(this), false);
 
                 if (option.hasAttribute('selected') && !option.hasAttribute('disabled')) {
                     new_option.classList.add('selected');
@@ -288,8 +283,8 @@
 
                 this.hideOptions();
 
-                if (this.original_select.hasAttribute('data-selectro-after-select'))
-                    this.trigger(this.original_select.getAttribute('data-selectro-after-select'));
+                if (this.original_select.hasAttribute('data-after-select'))
+                    this.trigger(this.original_select.getAttribute('data-after-select'));
                 else if (typeof $configs.afterSelect === "function")
                     $configs.afterSelect(getText(this.options[i]));
 
@@ -363,8 +358,7 @@
                 this.options_wrap = createEl('div', {'class': 'selectro-options-wrap'});
                 this.new_options = createEl('div', {'class': 'selectro-options'});
 
-                this.option_icons = !!(this.original_select.hasAttribute('data-selectro-option-icons') &&
-                this.original_select.getAttribute('data-selectro-option-icons') == 'true');
+                this.option_icons = this.original_select.classList.contains('option-icons');
                 this.searchable = (!this.multiple) ? this.original_select.classList.contains('searchable') : false;
 
                 if (this.searchable) {
@@ -374,7 +368,7 @@
                 }
 
                 if (!!this.searchable || !!this.multiple)
-                    this.no_match = createEl('div', {'class': 'selectro-no-matches'}, ((!!$configs.no_match) ? $configs.no_match : "No options were found matching your search"));
+                    this.no_match = createEl('div', {'class': 'selectro-no-matches'}, (this.original_select.hasAttribute('data-no-match'))? this.original_select.getAttribute('data-no-match') : ((!!$configs.no_match) ? $configs.no_match : "No options were found matching your search"));
 
                 for (var i = 0; i < this.original_select.children.length; i++) {
                     if (this.original_select.children[i].tagName.toLowerCase() === "optgroup")
@@ -502,7 +496,7 @@
 
             var selects = document.querySelectorAll(".selectro");
 
-            if (selects.length === 0 && selects === null)
+            if (selects === null || selects.length === 0)
                 return false;
 
             $configs = {
