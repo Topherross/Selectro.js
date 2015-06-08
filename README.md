@@ -59,4 +59,5 @@ selectro({
 When setting the `data-after-select` attribute remember to pass a function reference, and not a function call.
 
 __INCORRECT__ passing a function call; `data-after-select="myFunction()"`
+
 __CORRECT__ passing a function reference; `data-after-select="myFunction"`
