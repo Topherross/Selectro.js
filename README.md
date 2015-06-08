@@ -1,10 +1,13 @@
-SELECTRO
-========
+# SELECTRO
 
-Introduction
-------------
+## Introduction
 
 Selectro was designed to be a small, but robust library that allows developers to easily swap out traditional select elements with a customizable widget.
+
+## Notice
+
+1. Selectro is compatible with all modern desktop browsers (Chrome, Safari, FireFox), and IE 10+.
+2. It was a conscious decision to allow mobile devices to utilize the native select feature of the device. For this reason Selectro is not compatible with mobile operating systems.
  
 ### Using Selectro
 
