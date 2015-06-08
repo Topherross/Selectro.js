@@ -17,14 +17,18 @@ Selectro was designed to be a small, but robust library that allows developers t
 
 ### Initializing Selectro
 
-In your document ready function, call `selectro();`
+In your document ready function, call 
+
+```javascript selectro();```
 
 ### Selectro Global Configuration Options
 
 Global configurations are applied to all selects created when calling `selectro();`.
 Adding another select to the DOM, and invoking `selectro();` again will allow you to apply another set of configurations to the newly created Selctro elements. Previous configurations will not apply.
 
-There are four configuration options available when calling `selectro();`
+There are four configuration options available when calling
+
+```javascript selectro();```
 
 | Option | Acceptable Values | Default Value | Description |
 | ------ | ----------------- | --------------| ----------- |
