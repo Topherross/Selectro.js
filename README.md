@@ -44,8 +44,7 @@ selectro({
 
 ### Individual Selctro Configuration options
 
-1. If you would like to add search functionality to a specific Selctro drop-down add the class `searchable` to the original select.
-    * Selectro Multi-Selects automatically get a search box, and __DO NOT__ require the `searchable` class.   
+1. If you would like to add search functionality to a specific Selctro drop-down add the class `searchable` to the original select. Selectro Multi-Selects automatically get a search box, and __DO NOT__ require the `searchable` class.   
 2. Selectro supports an optional 'icon' div that can be added to every option element within that Selectro. To enable option Icons add the class `option-icons` to the original select.   
 3. To override the global `label` configuration, or the default for an individual Selectro; add `data-label="[Your Custom Label]"` to the original select.   
 4. To override the global `no_match` configuration, or the default for an individual Selectro; add `data-no-match="[Your Custom no-match String]"` to the original select.   
