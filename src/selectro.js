@@ -565,7 +565,7 @@
             return false;
         };
 
-    if (undefined !== module && module.exports) {
+    if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = selectro;
     } else {
         window.selectro = selectro;
