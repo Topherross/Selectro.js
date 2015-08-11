@@ -1,4 +1,4 @@
-(function () {
+(function (window, document) {
     'use strict';
 
     var $selectro,
@@ -8,12 +8,13 @@
         $msie_regex = /msie|trident/i,
 
         setText = function (el, text, html) {
-            if (typeof html !== "undefined" && html === true)
+            if (undefined !== html && html === true) {
                 el.innerHTML = text;
-            else if (document.all)
+            } else if (document.all) {
                 el.innerText = text;
-            else
+            } else {
                 el.textContent = text;
+            }
 
             return false;
         },
@@ -23,9 +24,11 @@
         },
 
         setAttributes = function (el, attrs) {
-            for (var attr in attrs) {
-                if (Object.prototype.hasOwnProperty.call(attrs, attr))
+            var attr;
+            for (attr in attrs) {
+                if (Object.prototype.hasOwnProperty.call(attrs, attr)) {
                     el.setAttribute(attr, attrs[attr]);
+                }
             }
 
             return false;
@@ -33,23 +36,27 @@
 
         createEl = function (type, attrs, text, html) {
             var el = document.createElement(type);
-            if (typeof attrs !== "undefined")
+            if (undefined !== attrs) {
                 setAttributes(el, attrs);
+            }
 
-            if (typeof text !== "undefined") {
-                if (typeof html !== "undefined")
+            if (undefined !== text) {
+                if (undefined !== html) {
                     setText(el, text, true);
-                else
+                } else {
                     setText(el, text);
+                }
             }
 
             return el;
         },
 
         batchRemoveClass = function (objs, klass) {
-            for (var i = 0; i < objs.length; i++) {
-                if (objs[i].classList.contains(klass))
+            var i;
+            for (i = 0; i < objs.length; i++) {
+                if (objs[i].classList.contains(klass)) {
                     objs[i].classList.remove(klass);
+                }
             }
 
             return false;
@@ -59,38 +66,45 @@
             trigger: function (func) {
                 var fn = window[func];
 
-                if (typeof fn === "function")
+                if (typeof fn === "function") {
                     fn();
+                }
 
                 return false;
             },
 
             addOptGroup: function (index) {
-                if (typeof index === "undefined")
+                if (undefined === index) {
                     return false;
+                }
 
-                if (this.original_select.children[index].hasAttribute("label"))
-                    this.new_options.appendChild(
-                        createEl("h6", {'class': 'selectro-optgroup-header'}, this.original_select.children[index].getAttribute("label")));
+                var i;
 
-                for (var i = 0; i < this.original_select.children[index].children.length; i++)
+                if (this.original_select.children[index].hasAttribute("label")) {
+                    this.new_options.appendChild(createEl("h6", {'class': 'selectro-optgroup-header'}, this.original_select.children[index].getAttribute("label")));
+                }
+
+                for (i = 0; i < this.original_select.children[index].children.length; i++) {
                     this.addOption(this.original_select.children[index].children[i]);
+                }
             },
 
             addOption: function (option) {
                 if (!option.hasAttribute('value')) {
-                    if (option === this.original_select.children[0])
+                    if (option === this.original_select.children[0]) {
                         this.original_select.value = "";
+                    }
                     return;
                 }
 
                 var new_option = createEl('div', {
-                    'class': 'selectro-option',
-                    'data-value': option.value
-                }, getText(option));
+                        'class': 'selectro-option',
+                        'data-value': option.value
+                    }, getText(option)),
+                    icon;
 
                 if (!!this.option_icons) {
-                    var icon = createEl('div', {
+                    icon = createEl('div', {
                         'class': 'selectro-option-icon',
                         'id': 'option_icon_' + option.value
                     });
@@ -101,15 +115,16 @@
                 this.options.push(new_option);
 
                 if (!option.hasAttribute('disabled')) {
-                    if (this.options.length == 1)
+                    if (this.options.length === 1) {
                         this.matches.push(0);
-                    else
+                    } else {
                         this.matches.push(this.options.indexOf(new_option));
+                    }
                 }
 
-               new_option.addEventListener("click", (function (event) {
+                new_option.addEventListener("click", function (event) {
                     this.selectOption(event);
-                }).bind(this), false);
+                }.bind(this), false);
 
                 if (option.hasAttribute('selected') && !option.hasAttribute('disabled')) {
                     new_option.classList.add('selected');
@@ -120,20 +135,21 @@
             },
 
             toggleOptions: function (event, stop) {
-                if (typeof stop === "boolean" && !!stop)
+                if (typeof stop === "boolean" && !!stop) {
                     event.stopPropagation();
+                }
 
-                if (typeof $selectro !== "undefined" &&
-                    $selectro.options_visible &&
-                    $selectro != this)
+                if (undefined !== $selectro && $selectro.options_visible && $selectro !== this) {
                     $selectro.hideOptions();
+                }
 
                 $selectro = this;
 
-                if (this.options_visible === true)
+                if (this.options_visible === true) {
                     this.hideOptions();
-                else if (this.options_visible === false)
+                } else if (this.options_visible === false) {
                     this.showOptions();
+                }
 
                 return false;
             },
@@ -147,11 +163,13 @@
                     batchRemoveClass(this.options, 'highlighted');
                     this.highlighted = -1;
 
-                    if (!!this.multiple)
+                    if (!!this.multiple) {
                         this.multi_input.value = "";
+                    }
 
-                    if (!!this.searchable)
+                    if (!!this.searchable) {
                         this.search_input.value = "";
+                    }
 
                     if (!!this.multiple || !!this.searchable) {
                         this.searchOptions();
@@ -170,15 +188,16 @@
                     this.options_wrap.addEventListener('click', function (event) {
                         event.stopPropagation();
                     });
+
                     this.options_visible = true;
 
-                    if (!!this.searchable &&
-                        this.search_input != document.activeElement)
+                    if (!!this.searchable && this.search_input !== document.activeElement) {
                         this.search_input.focus();
+                    }
 
-                    if (!!this.multiple &&
-                        this.multi_input != document.activeElement)
+                    if (!!this.multiple && this.multi_input !== document.activeElement) {
                         this.multi_input.focus();
+                    }
 
                     this.new_options.scrollTop = 0;
                 }
@@ -187,31 +206,37 @@
             },
 
             resetScroll: function () {
-                if (this.highlighted === -1)
+                if (this.highlighted === -1) {
                     return false;
+                }
 
                 var option_top = this.options[this.matches[this.highlighted]].getBoundingClientRect().top - this.new_options.getBoundingClientRect().top,
                     option_bottom = option_top + this.options[this.matches[this.highlighted]].offsetHeight;
 
-                if (option_top < 0)
+                if (option_top < 0) {
                     this.new_options.scrollTop -= Math.abs(option_top);
-                else if (option_bottom > this.new_options.clientHeight)
+                } else if (option_bottom > this.new_options.clientHeight) {
                     this.new_options.scrollTop += (option_bottom - this.new_options.clientHeight);
+                }
 
                 return false;
             },
 
             highlightOption: function (key) {
-                if (this.matches.length === 0)
+                if (this.matches.length === 0) {
                     return false;
+                }
 
                 var highlighted = (this.highlighted === -1) ? this.matches[0] : this.highlighted,
                     match_index = 0;
 
-                if (typeof key !== "undefined" && key == 38)
+                if (undefined !== key && key === 38) {
                     match_index = (highlighted === 0) ? 0 : this.highlighted - 1;
-                if (typeof key !== "undefined" && key == 40)
+                }
+
+                if (undefined !== key && key === 40) {
                     match_index = ((highlighted + 1) > (this.matches.length - 1)) ? this.matches.length - 1 : this.highlighted + 1;
+                }
 
                 this.highlighted = match_index;
                 batchRemoveClass(this.options, 'highlighted');
@@ -223,45 +248,52 @@
 
             searchOptions: function () {
                 var matches = false,
-                    search_field = (!!this.multiple) ? this.multi_input : this.search_input;
+                    search_field = (!!this.multiple) ? this.multi_input : this.search_input,
+                    i,
+                    el_text;
 
                 this.matches = [];
 
-                for (var i = 0; i < this.options.length; i++) {
-                    var el_text = getText(this.options[i]).toLowerCase();
+                for (i = 0; i < this.options.length; i++) {
+                    el_text = getText(this.options[i]).toLowerCase();
                     if (el_text.indexOf(search_field.value.toLowerCase()) === -1) {
                         this.options[i].style.display = "none";
                     } else {
-                        if (matches === false)
+                        if (matches === false) {
                             matches = true;
+                        }
 
                         this.options[i].style.display = "block";
-                        if (!this.options[i].hasAttribute('data-disabled'))
+                        if (!this.options[i].hasAttribute('data-disabled')) {
                             this.matches.push(parseInt(i));
+                        }
                     }
                 }
 
-                if (!matches)
+                if (!matches) {
                     this.new_options.appendChild(this.no_match);
-                else if (matches && this.no_match.parentNode !== null)
+                } else if (matches && this.no_match.parentNode !== null) {
                     this.new_options.removeChild(this.no_match);
+                }
 
                 return false;
             },
 
             selectOption: function (event, index) {
-                var i = (!isNaN(parseFloat(index))) ? index : (this.highlighted === -1) ? this.options.indexOf(event.target) : this.matches[this.highlighted];
+                var i = (!isNaN(parseFloat(index))) ? index : (this.highlighted === -1) ? this.options.indexOf(event.target) : this.matches[this.highlighted],
+                    option_remove,
+                    selected_option;
 
-                if (this.options[i].hasAttribute("data-disabled") &&
-                    this.options[i].getAttribute("data-disabled") === "disabled")
+                if (this.options[i].hasAttribute("data-disabled") && this.options[i].getAttribute("data-disabled") === "disabled") {
                     return false;
+                }
 
                 if (!!this.multiple) {
-                    var option_remove = createEl('div', {'class': 'selectro-option-multiple-remove'}),
-                        selected_option = createEl('div', {
-                            'class': 'selectro-option-multiple',
-                            'data-option-index': i
-                        }, getText(this.options[i]));
+                    option_remove = createEl('div', {'class': 'selectro-option-multiple-remove'});
+                    selected_option = createEl('div', {
+                        'class': 'selectro-option-multiple',
+                        'data-option-index': i
+                    }, getText(this.options[i]));
 
                     this.options[i].setAttribute('data-disabled', 'disabled');
                     this.options[i].classList.add('disabled');
@@ -277,16 +309,18 @@
 
                     setText(this.select_label, getText(this.options[i]));
 
-                    if (this.select_label.classList.contains('default'))
+                    if (this.select_label.classList.contains('default')) {
                         this.select_label.classList.remove('default');
+                    }
                 }
 
                 this.hideOptions();
 
-                if (this.original_select.hasAttribute('data-after-select'))
+                if (this.original_select.hasAttribute('data-after-select')) {
                     this.trigger(this.original_select.getAttribute('data-after-select'));
-                else if (typeof $configs.afterSelect === "function")
+                } else if (typeof $configs.afterSelect === "function") {
                     $configs.afterSelect(getText(this.options[i]));
+                }
 
                 return false;
             },
@@ -295,7 +329,8 @@
                 event.stopPropagation();
 
                 var option = event.target.parentNode,
-                    index = option.getAttribute('data-option-index');
+                    index = option.getAttribute('data-option-index'),
+                    i;
 
                 this.options[index].removeAttribute('data-disabled');
                 this.options[index].classList.remove('disabled');
@@ -305,15 +340,18 @@
 
                 this.matches = [];
 
-                for (var i = 0; i < this.options.length; i++)
-                    if (!this.options[i].hasAttribute('data-disabled'))
+                for (i = 0; i < this.options.length; i++) {
+                    if (!this.options[i].hasAttribute('data-disabled')) {
                         this.matches.push(parseInt(i));
+                    }
+                }
 
                 this.hideOptions();
             },
 
             selectDefaultOptions: function () {
-                for (var i = 0; i < this.options.length; i++) {
+                var i;
+                for (i = 0; i < this.options.length; i++) {
                     if (this.options[i].classList.contains('selected') && !this.options[i].classList.contains('disabled')) {
                         this.selectOption(null, (!!this.multiple) ? this.matches.indexOf(i) : i);
                     }
@@ -323,9 +361,11 @@
             },
 
             build: function (select) {
-                if (typeof select === "undefined" ||
-                    select.hasAttribute('data-selectro-initialized'))
+                if (undefined === select || select.hasAttribute('data-selectro-initialized')) {
                     return false;
+                }
+
+                var i;
 
                 this.options = [];
                 this.matches = [];
@@ -367,14 +407,16 @@
                     this.search_icon = createEl('div', {'class': 'selectro-search-icon'});
                 }
 
-                if (!!this.searchable || !!this.multiple)
-                    this.no_match = createEl('div', {'class': 'selectro-no-matches'}, (this.original_select.hasAttribute('data-no-match'))? this.original_select.getAttribute('data-no-match') : ((!!$configs.no_match) ? $configs.no_match : "No options were found matching your search"));
+                if (!!this.searchable || !!this.multiple) {
+                    this.no_match = createEl('div', {'class': 'selectro-no-matches'}, (this.original_select.hasAttribute('data-no-match')) ? this.original_select.getAttribute('data-no-match') : ((!!$configs.no_match) ? $configs.no_match : "No options were found matching your search"));
+                }
 
-                for (var i = 0; i < this.original_select.children.length; i++) {
-                    if (this.original_select.children[i].tagName.toLowerCase() === "optgroup")
+                for (i = 0; i < this.original_select.children.length; i++) {
+                    if (this.original_select.children[i].tagName.toLowerCase() === "optgroup") {
                         this.addOptGroup(i);
-                    else
+                    } else {
                         this.addOption(this.original_select.children[i]);
+                    }
                 }
 
                 if (this.searchable) {
@@ -397,80 +439,84 @@
                 this.select_wrap.appendChild(this.new_select);
                 this.select_wrap.appendChild(this.options_wrap);
 
-                this.new_select.addEventListener('click', (function (event) {
+                this.new_select.addEventListener('click', function (event) {
                     this.toggleOptions(event, true);
-                }).bind(this), false);
+                }.bind(this), false);
 
                 document.addEventListener('click', this.hideOptions.bind(this), false);
 
                 if (!!this.searchable) {
-                    this.search_input.addEventListener('paste', (function () {
-                        // @TODO: Timeout used until clipboardData is accessible in a consistent cross-browser environment. 12-24-2014
-                        setTimeout((function () {
+                    this.search_input.addEventListener('paste', function () {
+                        setTimeout(function () {
                             this.searchOptions.bind(this);
-                        }).bind(this), 20);
-                    }).bind(this), false);
+                        }.bind(this), 20);
+                    }.bind(this), false);
 
-                    this.search_input.addEventListener('keyup', (function () {
+                    this.search_input.addEventListener('keyup', function () {
                         var keys = [38, 40],
                             key = event.keyCode || event.which;
 
-                        if (keys.indexOf(key) !== -1 && this.options_visible)
+                        if (keys.indexOf(key) !== -1 && this.options_visible) {
                             this.highlightOption(key);
-                        else if (keys.indexOf(key) === -1)
+                        } else if (keys.indexOf(key) === -1) {
                             this.searchOptions();
-                    }).bind(this), false);
+                        }
+                    }.bind(this), false);
 
-                    this.search_input.addEventListener('keydown', (function (event) {
+                    this.search_input.addEventListener('keydown', function (event) {
                         var key = event.keyCode || event.which;
 
-                        if (key == 13)
+                        if (key === 13) {
                             event.preventDefault();
+                        }
 
-                        if (key == 13 && this.highlighted !== -1)
+                        if (key === 13 && this.highlighted !== -1) {
                             this.selectOption(event);
-                        else if (key == 9 && this.options_visible)
+                        } else if (key === 9 && this.options_visible) {
                             this.hideOptions();
-                    }).bind(this), false);
+                        }
+                    }.bind(this), false);
                 }
 
                 if (!!this.multiple) {
-                    this.multi_input.addEventListener('paste', (function () {
-                        // @TODO: Timeout used until clipboardData is accessible in a consistent cross-browser environment. 12-24-2014
-                        setTimeout((function () {
+                    this.multi_input.addEventListener('paste', function () {
+                        setTimeout(function () {
                             this.searchOptions();
-                        }).bind(this), 20);
-                    }).bind(this), false);
+                        }.bind(this), 20);
+                    }.bind(this), false);
                 }
 
-                this.new_select.addEventListener('keyup', (function (event) {
+                this.new_select.addEventListener('keyup', function (event) {
                     var keys = [38, 40],
                         key = event.keyCode || event.which;
 
-                    if (key == 38 && this.options_visible && this.highlighted === 0)
+                    if (key === 38 && this.options_visible && this.highlighted === 0) {
                         this.hideOptions();
-                    else if (key == 40 && !this.options_visible)
+                    } else if (key === 40 && !this.options_visible) {
                         this.showOptions();
-                    else if (keys.indexOf(key) !== -1 && this.options_visible)
+                    } else if (keys.indexOf(key) !== -1 && this.options_visible) {
                         this.highlightOption(key);
-                    else if (keys.indexOf(key) === -1 && !!this.multiple)
+                    } else if (keys.indexOf(key) === -1 && !!this.multiple) {
                         this.searchOptions();
+                    }
 
-                }).bind(this), false);
+                }.bind(this), false);
 
-                this.new_select.addEventListener('keydown', (function (event) {
+                this.new_select.addEventListener('keydown', function (event) {
                     var key = event.keyCode || event.which;
 
-                    if (key == 13)
+                    if (key === 13) {
                         event.preventDefault();
+                    }
 
-                    if (key == 13 && this.highlighted !== -1 && !this.multiple)
+                    if (key === 13 && this.highlighted !== -1 && !this.multiple) {
                         this.selectOption(event);
-                    else if (key == 13 && this.highlighted !== -1 && !!this.multiple)
+                    } else if (key === 13 && this.highlighted !== -1 && !!this.multiple) {
                         this.selectOption(event);
-                    else if (key == 9 && this.options_visible)
+                    } else if (key === 9 && this.options_visible) {
                         this.hideOptions();
-                }).bind(this), false);
+                    }
+                }.bind(this), false);
 
                 this.selectDefaultOptions();
 
@@ -483,21 +529,24 @@
         },
 
         selectro = function (configs) {
-            if ($mobile_regex.test($browser))
+            if ($mobile_regex.test($browser)) {
                 return false;
+            }
 
             if ($msie_regex.test($browser)) {
                 var match = $browser.match(/(?:msie |rv:)(\d+(\.\d+)?)/i),
                     version = (match && match.length > 1 && match[1]) || '';
 
-                if (Math.abs(parseFloat(version)) <= 10)
+                if (Math.abs(parseFloat(version)) <= 10) {
                     return false;
+                }
             }
 
-            var selects = document.querySelectorAll(".selectro");
+            var selects = document.querySelectorAll(".selectro"), i, _selectro;
 
-            if (selects === null || selects.length === 0)
+            if (selects === null || selects.length === 0) {
                 return false;
+            }
 
             $configs = {
                 label: configs.label || false,
@@ -505,9 +554,9 @@
                 afterSelect: configs.afterSelect || false
             };
 
-            for (var i = 0; i < selects.length; i++) {
+            for (i = 0; i < selects.length; i++) {
                 if (!selects[i].hasOwnProperty('data-selectro-initialized')) {
-                    var _selectro = Object.create(Selectro);
+                    _selectro = Object.create(Selectro);
 
                     _selectro.build(selects[i]);
                 }
@@ -516,9 +565,9 @@
             return false;
         };
 
-    if (typeof module !== 'undefined' && module.exports) {
+    if (undefined !== module && module.exports) {
         module.exports = selectro;
     } else {
         window.selectro = selectro;
     }
-})();
+})(window, document);
